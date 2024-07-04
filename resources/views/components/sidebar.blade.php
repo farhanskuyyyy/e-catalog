@@ -16,7 +16,7 @@
             <li class="{{ Request::is('user') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('user') }}"><i class="far fa-user"></i> <span>Users</span></a>
             </li>
-            <li class="nav-item dropdown {{ $type_menu === 'master-data' ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ Request::is(['category','product']) ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-th-large"></i><span>Master Data</span></a>
                 <ul class="dropdown-menu">
                     <li class='{{ Request::is('category') ? 'active' : '' }}'>

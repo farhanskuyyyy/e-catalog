@@ -18,6 +18,7 @@ return new class extends Migration
             $table->double('price')->default(0);
             $table->integer('stock')->default(0);
             $table->string('description')->nullable();
+            $table->text('image')->nullable();
             $table->integer('estimated_time')->default(0); // on hours
             $table->timestamps();
 

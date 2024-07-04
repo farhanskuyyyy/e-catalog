@@ -24,11 +24,13 @@ Route::middleware('auth')->group(function () {
         ->name("category.")
         ->controller(CategoryController::class)
         ->group(function () {
+            Route::get("/", "index")->name("index");
             Route::get("/create", "create")->name("create");
-            Route::get("/edit/{id}", "edit")->name("edit");
+            Route::get("/{id}/edit", "edit")->name("edit");
+            Route::get("/{id}/show", "show")->name("show");
             Route::post("/store", "store")->name("store");
-            Route::post("/update/{id}", "update")->name("update");
-            Route::delete("/delete/{id}", "delete")->name("delete");
+            Route::post("/{id}/update", "update")->name("update");
+            Route::delete("/{id}/delete", "destroy")->name("delete");
             Route::get("/list", "getDataList")->name("list");
         });
 
@@ -36,11 +38,13 @@ Route::middleware('auth')->group(function () {
         ->name("product.")
         ->controller(ProductController::class)
         ->group(function () {
+            Route::get("/", "index")->name("index");
             Route::get("/create", "create")->name("create");
-            Route::get("/edit/{id}", "edit")->name("edit");
+            Route::get("/{id}/edit", "edit")->name("edit");
+            Route::get("/{id}/show", "show")->name("show");
             Route::post("/store", "store")->name("store");
-            Route::post("/update/{id}", "update")->name("update");
-            Route::delete("/delete/{id}", "delete")->name("delete");
+            Route::post("/{id}/update", "update")->name("update");
+            Route::delete("/{id}/delete", "destroy")->name("delete");
             Route::get("/list", "getDataList")->name("list");
         });
 
@@ -48,11 +52,13 @@ Route::middleware('auth')->group(function () {
         ->name("order.")
         ->controller(OrderController::class)
         ->group(function () {
+            Route::get("/", "index")->name("index");
             Route::get("/create", "create")->name("create");
-            Route::get("/edit/{id}", "edit")->name("edit");
+            Route::get("/{id}/edit", "edit")->name("edit");
+            Route::get("/{id}/show", "show")->name("show");
             Route::post("/store", "store")->name("store");
-            Route::post("/update/{id}", "update")->name("update");
-            Route::delete("/delete/{id}", "delete")->name("delete");
+            Route::post("/{id}/update", "update")->name("update");
+            Route::delete("/{id}/delete", "destroy")->name("delete");
             Route::get("/list", "getDataList")->name("list");
         });
 
@@ -60,11 +66,13 @@ Route::middleware('auth')->group(function () {
         ->name("user.")
         ->controller(UserController::class)
         ->group(function () {
+            Route::get("/", "index")->name("index");
             Route::get("/create", "create")->name("create");
-            Route::get("/edit/{id}", "edit")->name("edit");
+            Route::get("/{id}/edit", "edit")->name("edit");
+            Route::get("/{id}/show", "show")->name("show");
             Route::post("/store", "store")->name("store");
-            Route::post("/update/{id}", "update")->name("update");
-            Route::delete("/delete/{id}", "delete")->name("delete");
+            Route::post("/{id}/update", "update")->name("update");
+            Route::delete("/{id}/delete", "destroy")->name("delete");
             Route::get("/list", "getDataList")->name("list");
         });
 });
