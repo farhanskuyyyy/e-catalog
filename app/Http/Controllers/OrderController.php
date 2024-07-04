@@ -32,7 +32,7 @@ class OrderController extends Controller
             "AMBIL SENDIRI", "DIANTAR"
         ];
         $status = [
-            "PENDING", "PROCESS", "DONE", "DELIVERED"
+            "PENDING", "PROCESS", "DONE", "DELIVERED", "CANCEL"
         ];
 
         return view('order.create', compact('users', 'payments', 'shippings', 'status'));
@@ -55,7 +55,7 @@ class OrderController extends Controller
             try {
                 DB::beginTransaction();
                 $insert = Order::create([
-                    "order_code" => "INV-".time().Str::random(5),
+                    "order_code" => "INV-" . time() . Str::random(5),
                     "user_id" => $request->input('user'),
                     "payment" => $request->input('payment'),
                     "shipping" => $request->input('shipping'),
@@ -105,10 +105,10 @@ class OrderController extends Controller
                 "AMBIL SENDIRI", "DIANTAR"
             ];
             $status = [
-                "PENDING", "PROCESS", "DONE", "DELIVERED"
+                "PENDING", "PROCESS", "DONE", "DELIVERED", "CANCEL"
             ];
 
-            return view('order.edit', compact('findOrder','users', 'payments', 'shippings', 'status'));
+            return view('order.edit', compact('findOrder', 'users', 'payments', 'shippings', 'status'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error', "Data Not Found");
         }
@@ -189,7 +189,7 @@ class OrderController extends Controller
     {
         try {
             return response()->json([
-                'data' => Order::with('user')->get()
+                'data' => Order::with('user')->orderBy('created_at','asc')->get()
             ]);
         } catch (\Throwable $th) {
             return response()->json([

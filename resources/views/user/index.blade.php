@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'DataTables')
+@section('title', 'User')
 
 @push('style')
     <!-- CSS Libraries -->

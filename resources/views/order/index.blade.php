@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'DataTables')
+@section('title', 'Order')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -105,6 +105,9 @@
                                     break;
                                 case 'done':
                                     return '<div class="bg-success rounded text-black">Done</div>'
+                                    break;
+                                case 'cancel':
+                                    return '<div class="bg-danger rounded text-black">Cancel</div>'
                                     break;
                                 default:
                                     return "";
