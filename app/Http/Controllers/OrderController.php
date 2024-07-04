@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Models\User;
 use App\Models\Order;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -22,7 +24,18 @@ class OrderController extends Controller
      */
     public function create()
     {
-        return view('order.create');
+        $users = User::all();
+        $payments = [
+            "CASH", "TRANSFER"
+        ];
+        $shippings = [
+            "AMBIL SENDIRI", "DIANTAR"
+        ];
+        $status = [
+            "PENDING", "PROCESS", "DONE", "DELIVERED"
+        ];
+
+        return view('order.create', compact('users', 'payments', 'shippings', 'status'));
     }
 
     /**
@@ -31,14 +44,23 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required'],
+            'user' => ['required'],
+            'payment' => ['required'],
+            'shipping' => ['required'],
+            'status' => ['required'],
+            'pickup_at' => ['required']
         ]);
 
         try {
             try {
                 DB::beginTransaction();
                 $insert = Order::create([
-                    "name" => $request->input('name')
+                    "order_code" => "INV-".time().Str::random(5),
+                    "user_id" => $request->input('user'),
+                    "payment" => $request->input('payment'),
+                    "shipping" => $request->input('shipping'),
+                    "status" => $request->input('status'),
+                    "pickup_at" => $request->input('pickup_at'),
                 ]);
 
                 if (!$insert) {
@@ -64,7 +86,7 @@ class OrderController extends Controller
             $findOrder = Order::find($order);
             return view('order.show', compact('findOrder'));
         } catch (\Exception $th) {
-            return redirect()->back()->with('error',"Data Not Found");
+            return redirect()->back()->with('error', "Data Not Found");
         }
     }
 
@@ -75,9 +97,20 @@ class OrderController extends Controller
     {
         try {
             $findOrder = Order::find($order);
-            return view('order.edit', compact('findOrder'));
+            $users = User::all();
+            $payments = [
+                "CASH", "TRANSFER"
+            ];
+            $shippings = [
+                "AMBIL SENDIRI", "DIANTAR"
+            ];
+            $status = [
+                "PENDING", "PROCESS", "DONE", "DELIVERED"
+            ];
+
+            return view('order.edit', compact('findOrder','users', 'payments', 'shippings', 'status'));
         } catch (\Exception $th) {
-            return redirect()->back()->with('error',"Data Not Found");
+            return redirect()->back()->with('error', "Data Not Found");
         }
     }
 
@@ -87,7 +120,11 @@ class OrderController extends Controller
     public function update(Request $request, $order)
     {
         $request->validate([
-            'name' => ['required'],
+            'user' => ['required'],
+            'payment' => ['required'],
+            'shipping' => ['required'],
+            'status' => ['required'],
+            'pickup_at' => ['required']
         ]);
 
         try {
@@ -99,7 +136,11 @@ class OrderController extends Controller
             try {
                 DB::beginTransaction();
                 $update = $findOrder->update([
-                    'name' => $request->input('name')
+                    "user_id" => $request->input('user'),
+                    "payment" => $request->input('payment'),
+                    "shipping" => $request->input('shipping'),
+                    "status" => $request->input('status'),
+                    "pickup_at" => $request->input('pickup_at'),
                 ]);
 
                 if (!$update) {
@@ -148,7 +189,7 @@ class OrderController extends Controller
     {
         try {
             return response()->json([
-                'data' => Order::all()
+                'data' => Order::with('user')->get()
             ]);
         } catch (\Throwable $th) {
             return response()->json([

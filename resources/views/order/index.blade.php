@@ -26,7 +26,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table-striped table" id="table-order"  style="text-align: center">
+                            <table class="table-striped table" id="table-order" style="text-align: center">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Order Code</th>
@@ -90,7 +90,27 @@
                         data: 'shipping',
                     },
                     {
-                        data: 'status',
+                        data: null,
+                        class: 'text-center',
+                        render: function(data) {
+                            switch (data.status.toLowerCase()) {
+                                case 'pending':
+                                    return '<div class="bg-warning rounded text-black">Pending</div>'
+                                    break;
+                                case 'process':
+                                    return '<div class="bg-primary rounded text-white">Process</div>'
+                                    break;
+                                case 'delivered':
+                                    return '<div class="bg-success rounded text-black">Delivered</div>'
+                                    break;
+                                case 'done':
+                                    return '<div class="bg-success rounded text-black">Done</div>'
+                                    break;
+                                default:
+                                    return "";
+                                    break;
+                            }
+                        },
                     },
                     {
                         data: null,
@@ -115,48 +135,48 @@
         }
 
         function deleteCategory(id) {
-                Swal.fire({
-                    title: 'Do you want to delete the order?',
-                    showCancelButton: true,
-                    icon: 'warning',
-                    confirmButtonColor: '#eb2626',
-                    confirmButtonText: 'Delete',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: base_url + "/order/" + id + "/delete",
-                            method: "DELETE",
-                            beforeSend: function() {
-                                Swal.fire({
-                                    title: 'Please Wait !',
-                                    html: 'Updating Data ...', // add html attribute if you want or remove
-                                    allowOutsideClick: false,
-                                    onBeforeOpen: () => {
-                                        Swal.showLoading()
-                                    },
-                                });
-                            },
-                            success: function(data) {
-                                swal.fire({
-                                    icon: "success",
-                                    title: "Success!",
-                                    text: data.message,
-                                    timer : 2000
-                                });
-                                $('#table-order').DataTable().destroy();
-                                getDataList();
-                            },
-                            error: function(jqXHR, textStatus, errorThrown) {
-                                swal.fire({
-                                    icon: "error",
-                                    title: "Error!",
-                                    text: jqXHR.responseJSON.message,
-                                    timer : 2000
-                                });
-                            }
-                        });
-                    }
-                })
-            }
+            Swal.fire({
+                title: 'Do you want to delete the order?',
+                showCancelButton: true,
+                icon: 'warning',
+                confirmButtonColor: '#eb2626',
+                confirmButtonText: 'Delete',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: base_url + "/order/" + id + "/delete",
+                        method: "DELETE",
+                        beforeSend: function() {
+                            Swal.fire({
+                                title: 'Please Wait !',
+                                html: 'Updating Data ...', // add html attribute if you want or remove
+                                allowOutsideClick: false,
+                                onBeforeOpen: () => {
+                                    Swal.showLoading()
+                                },
+                            });
+                        },
+                        success: function(data) {
+                            swal.fire({
+                                icon: "success",
+                                title: "Success!",
+                                text: data.message,
+                                timer: 2000
+                            });
+                            $('#table-order').DataTable().destroy();
+                            getDataList();
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            swal.fire({
+                                icon: "error",
+                                title: "Error!",
+                                text: jqXHR.responseJSON.message,
+                                timer: 2000
+                            });
+                        }
+                    });
+                }
+            })
+        }
     </script>
 @endpush
