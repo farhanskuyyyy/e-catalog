@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Show Category')
+@section('title', 'Show Order')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -9,10 +9,10 @@
 @section('main')<div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Show Category</h1>
+                <h1>Show Order</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('category.index') }}">Category</a></div>
+                    <div class="breadcrumb-item"><a href="{{ route('order.index') }}">Order</a></div>
                     <div class="breadcrumb-item">Show</div>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                             <input type="text" class="form-control" id="name" name="name"
                                 value="{{ $findCategory->name }}" required readonly>
                         </div>
-                        <a href="{{ route('category.index') }}" class="btn btn-primary">Back</a>
+                        <a href="{{ route('order.index') }}" class="btn btn-primary">Back</a>
                     </div>
                 </div>
             </div>

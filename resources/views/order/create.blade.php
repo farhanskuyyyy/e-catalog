@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Create Category')
+@section('title', 'Create Order')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -9,10 +9,10 @@
 @section('main')<div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Create Category</h1>
+                <h1>Create Order</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('category.index') }}">Category</a></div>
+                    <div class="breadcrumb-item"><a href="{{ route('order.index') }}">Order</a></div>
                     <div class="breadcrumb-item">Create</div>
                 </div>
             </div>
@@ -22,7 +22,7 @@
                     <div class="card-header">
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('category.store') }}">
+                        <form method="POST" action="{{ route('order.store') }}">
                             @csrf
                             <div class="form-group">
                                 <label for="name">Name</label>

@@ -26,7 +26,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table-striped table" id="table-category">
+                            <table class="table-striped table" id="table-category"  style="text-align: center">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Name</th>
