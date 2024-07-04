@@ -24,8 +24,15 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name"
-                                value="{{ $findCategory->name }}" required readonly>
+                            <input type="text" class="form-control" id="name" name="name" readonly value="{{ $findUser->name }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="phonenumber">Phonenumber</label>
+                            <input type="text" class="form-control" id="phonenumber" name="phonenumber" readonly value="{{ $findUser->phonenumber }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" readonly value="{{ $findUser->email }}">
                         </div>
                         <a href="{{ route('user.index') }}" class="btn btn-primary">Back</a>
                     </div>

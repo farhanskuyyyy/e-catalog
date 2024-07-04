@@ -6,6 +6,7 @@ use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -35,22 +36,20 @@ class UserController extends Controller
         ]);
 
         try {
-            try {
-                DB::beginTransaction();
-                $insert = User::create([
-                    "name" => $request->input('name')
-                ]);
+            $insert = User::create([
+                "name" => $request->input('name'),
+                "phonenumber" => $request->input('phonenumber'),
+                "email" => $request->input('email'),
+                "password" => Hash::make("password")
+            ]);
 
-                if (!$insert) {
-                    throw new Exception("Failed Insert User");
-                }
-
-                DB::commit();
-            } catch (\Exception $th) {
-                DB::rollBack();
+            if (!$insert) {
+                throw new Exception("Failed Insert User");
             }
+
             return redirect()->route('user.index')->with('success', "Success");
         } catch (\Exception $th) {
+            dd($th->getMessage());
             return redirect()->back()->with('error', "Failed");
         }
     }
@@ -64,7 +63,7 @@ class UserController extends Controller
             $findUser = User::find($user);
             return view('user.show', compact('findUser'));
         } catch (\Exception $th) {
-            return redirect()->back()->with('error',"Data Not Found");
+            return redirect()->back()->with('error', "Data Not Found");
         }
     }
 
@@ -77,7 +76,7 @@ class UserController extends Controller
             $findUser = User::find($user);
             return view('user.edit', compact('findUser'));
         } catch (\Exception $th) {
-            return redirect()->back()->with('error',"Data Not Found");
+            return redirect()->back()->with('error', "Data Not Found");
         }
     }
 
@@ -99,7 +98,9 @@ class UserController extends Controller
             try {
                 DB::beginTransaction();
                 $update = $findUser->update([
-                    'name' => $request->input('name')
+                    'name' => $request->input('name'),
+                    "phonenumber" => $request->input('phonenumber'),
+                    "email" => $request->input('email')
                 ]);
 
                 if (!$update) {

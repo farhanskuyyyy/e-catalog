@@ -22,12 +22,19 @@
                     <div class="card-header">
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('user.update',['id' => $findCategory->id]) }}">
+                        <form method="POST" action="{{ route('user.update',['id' => $findUser->id]) }}">
                             @csrf
                             <div class="form-group">
                                 <label for="name">Name</label>
-                                <input type="text"
-                                    class="form-control" id="name" name="name" value="{{ $findCategory->name }}" required>
+                                <input type="text" class="form-control" id="name" name="name" required value="{{ $findUser->name }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="phonenumber">Phonenumber</label>
+                                <input type="text" class="form-control" id="phonenumber" name="phonenumber" value="{{ $findUser->phonenumber }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{ $findUser->email }}">
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
