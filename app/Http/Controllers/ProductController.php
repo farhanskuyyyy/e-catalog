@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\Product;
+use App\Models\Category;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -22,7 +25,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('product.create');
+        $categories = Category::all();
+        return view('product.create',compact('categories'));
     }
 
     /**
@@ -32,13 +36,36 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => ['required'],
+            'category_id' => ['required'],
+            'price' => ['required','numeric'],
+            'stock' => ['required','numeric'],
+            'estimated_time' => ['required','numeric'],
+            'image' => 'required|mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,txt|max:4096'
         ]);
 
         try {
+            $findCategory = Category::find($request->input('category_id'));
+            if (!$findCategory) {
+                throw new Exception("Category Not Found");
+            }
+
+            $fileName = '';
+            $name = "product_" . Str::random(4) . time();
+
+            if ($request->file('image')) {
+                $fileName = $name . '.' . $request->image->extension();
+                $request->image->storeAs('public/product', $fileName);
+            }
             try {
                 DB::beginTransaction();
                 $insert = Product::create([
-                    "name" => $request->input('name')
+                    "name" => $request->input('name'),
+                    "category_id" => $request->input('category_id'),
+                    "price" => $request->input('price'),
+                    "stock" => $request->input('stock'),
+                    "estimated_time" => $request->input('estimated_time'),
+                    "description" => $request->input('description') ?? null,
+                    "image" => $fileName,
                 ]);
 
                 if (!$insert) {
@@ -61,8 +88,8 @@ class ProductController extends Controller
     public function show($product)
     {
         try {
-            $findCategory = Product::find($product);
-            return view('product.show', compact('findCategory'));
+            $findProduct = Product::find($product);
+            return view('product.show', compact('findProduct'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error',"Data Not Found");
         }
@@ -74,8 +101,9 @@ class ProductController extends Controller
     public function edit($product)
     {
         try {
-            $findCategory = Product::find($product);
-            return view('product.edit', compact('findCategory'));
+            $findProduct = Product::find($product);
+            $categories = Category::all();
+            return view('product.edit', compact('findProduct','categories'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error',"Data Not Found");
         }
@@ -88,19 +116,52 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => ['required'],
+            'category_id' => ['required'],
+            'price' => ['required','numeric'],
+            'stock' => ['required','numeric'],
+            'estimated_time' => ['required'],
         ]);
 
         try {
-            $findCategory = Product::find($product);
-            if ($findCategory == null) {
+            $fileName = '';
+            $name = "product_" . Str::random(4) . time();
+
+            if ($request->file('image')) {
+                $request->validate([
+                    'image' => ['mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,txt|max:4096']
+                ]);
+
+                $fileName = $name . '.' . $request->image->extension();
+                $request->image->storeAs('public/product', $fileName);
+
+            }
+
+            $findProduct = Product::find($product);
+            if ($findProduct == null) {
                 throw new Exception("Product Not Found");
             }
 
             try {
                 DB::beginTransaction();
-                $update = $findCategory->update([
-                    'name' => $request->input('name')
-                ]);
+                $data = [
+                    "name" => $request->input('name'),
+                    "category_id" => $request->input('category_id'),
+                    "price" => $request->input('price'),
+                    "stock" => $request->input('stock'),
+                    "estimated_time" => $request->input('estimated_time'),
+                    "description" => $request->input('description') ?? null,
+                ];
+
+                if ($request->file('image')) {
+                    $data["image"] = $fileName;
+                    if ($findProduct->image) {
+                        if (Storage::exists('public/product/' . $findProduct->image)) {
+                            Storage::delete('public/product/' . $findProduct->image);
+                        }
+                    }
+                }
+
+                $update = $findProduct->update($data);
 
                 if (!$update) {
                     throw new Exception("Failed Update Product");
@@ -122,14 +183,21 @@ class ProductController extends Controller
     public function destroy($product)
     {
         try {
-            $findCategory = Product::find($product);
-            if ($findCategory == null) {
+            $findProduct = Product::find($product);
+            if ($findProduct == null) {
                 throw new Exception("Product Not Found");
             }
 
-            $delete = $findCategory->delete();
+            $fileName = $findProduct->image;
+            $delete = $findProduct->delete();
             if (!$delete) {
                 throw new Exception("Failed Delete Product");
+            }
+
+            if ($fileName) {
+                if (Storage::exists('public/product/' . $fileName)) {
+                    Storage::delete('public/product/' . $fileName);
+                }
             }
 
             return response()->json([
@@ -148,7 +216,7 @@ class ProductController extends Controller
     {
         try {
             return response()->json([
-                'data' => Product::all()
+                'data' => Product::with('category')->get()
             ]);
         } catch (\Throwable $th) {
             return response()->json([

@@ -61,8 +61,8 @@ class UserController extends Controller
     public function show($user)
     {
         try {
-            $findCategory = User::find($user);
-            return view('user.show', compact('findCategory'));
+            $findUser = User::find($user);
+            return view('user.show', compact('findUser'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error',"Data Not Found");
         }
@@ -74,8 +74,8 @@ class UserController extends Controller
     public function edit($user)
     {
         try {
-            $findCategory = User::find($user);
-            return view('user.edit', compact('findCategory'));
+            $findUser = User::find($user);
+            return view('user.edit', compact('findUser'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error',"Data Not Found");
         }
@@ -91,14 +91,14 @@ class UserController extends Controller
         ]);
 
         try {
-            $findCategory = User::find($user);
-            if ($findCategory == null) {
+            $findUser = User::find($user);
+            if ($findUser == null) {
                 throw new Exception("User Not Found");
             }
 
             try {
                 DB::beginTransaction();
-                $update = $findCategory->update([
+                $update = $findUser->update([
                     'name' => $request->input('name')
                 ]);
 
@@ -122,12 +122,12 @@ class UserController extends Controller
     public function destroy($user)
     {
         try {
-            $findCategory = User::find($user);
-            if ($findCategory == null) {
+            $findUser = User::find($user);
+            if ($findUser == null) {
                 throw new Exception("User Not Found");
             }
 
-            $delete = $findCategory->delete();
+            $delete = $findUser->delete();
             if (!$delete) {
                 throw new Exception("Failed Delete User");
             }

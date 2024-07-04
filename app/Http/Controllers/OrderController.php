@@ -61,8 +61,8 @@ class OrderController extends Controller
     public function show($order)
     {
         try {
-            $findCategory = Order::find($order);
-            return view('order.show', compact('findCategory'));
+            $findOrder = Order::find($order);
+            return view('order.show', compact('findOrder'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error',"Data Not Found");
         }
@@ -74,8 +74,8 @@ class OrderController extends Controller
     public function edit($order)
     {
         try {
-            $findCategory = Order::find($order);
-            return view('order.edit', compact('findCategory'));
+            $findOrder = Order::find($order);
+            return view('order.edit', compact('findOrder'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error',"Data Not Found");
         }
@@ -91,14 +91,14 @@ class OrderController extends Controller
         ]);
 
         try {
-            $findCategory = Order::find($order);
-            if ($findCategory == null) {
+            $findOrder = Order::find($order);
+            if ($findOrder == null) {
                 throw new Exception("Order Not Found");
             }
 
             try {
                 DB::beginTransaction();
-                $update = $findCategory->update([
+                $update = $findOrder->update([
                     'name' => $request->input('name')
                 ]);
 
@@ -122,12 +122,12 @@ class OrderController extends Controller
     public function destroy($order)
     {
         try {
-            $findCategory = Order::find($order);
-            if ($findCategory == null) {
+            $findOrder = Order::find($order);
+            if ($findOrder == null) {
                 throw new Exception("Order Not Found");
             }
 
-            $delete = $findCategory->delete();
+            $delete = $findOrder->delete();
             if (!$delete) {
                 throw new Exception("Failed Delete Order");
             }

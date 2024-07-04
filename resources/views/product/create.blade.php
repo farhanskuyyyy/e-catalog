@@ -22,11 +22,50 @@
                     <div class="card-header">
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('product.store') }}">
+                        <form method="POST" action="{{ route('product.store') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label for="name">Name</label>
-                                <input type="text" class="form-control" id="name" name="name" required value="{{ old('name') }}">
+                                <input type="text" class="form-control" id="name" name="name" required
+                                    value="{{ old('name') }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="category_id">Category</label>
+                                <select name="category_id" id="category_id" class="form-control">
+                                    <option value="">Select Category</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ $category->id == old('category_id') ? 'selected' : '' }}>
+                                            {{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="price">Price</label>
+                                <input type="number" class="form-control" id="price" name="price" required
+                                    value="{{ old('price') }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="stock">Stock</label>
+                                <input type="number" class="form-control" id="stock" name="stock" required
+                                    value="{{ old('stock') }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="estimated_time">Estimated Time (Minutes)</label>
+                                <input type="number" class="form-control" id="estimated_time" name="estimated_time"
+                                    required value="{{ old('estimated_time') }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="image">Image</label>
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*"
+                                    required value="{{ old('image') }}">
+                            </div>
+                            <div class="mb-3" id="preview-image">
+                                <img src="" alt="" width="300" height="400" onerror="this.src='https://placehold.co/100x100'">
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea class="form-control " name="description" id="description" cols="40" rows="30" style="height: 100px">{{ old('description') }}</textarea>
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
@@ -38,7 +77,24 @@
 @endsection
 
 @push('scripts')
-    <!-- JS Libraies -->
+    <script>
+        $('#image').change(function() {
+            var fileTypes = ['jpg', 'jpeg', 'png', 'gif', 'svg']; //acceptable file types
 
-    <!-- Page Specific JS File -->
+            var extension = this.files[0].name.split('.').pop().toLowerCase() //file extension from input file
+            var isSuccess = fileTypes.indexOf(extension) > -1; //is extension in acceptable types
+
+            if (isSuccess) { //yes
+                let reader = new FileReader();
+                reader.onload = (e) => {
+                    $('#preview-image').html(
+                        `<img src="${e.target.result}" alt="Avatar" width="400" height="400">`
+                    );
+                }
+                reader.readAsDataURL(this.files[0]);
+            } else {
+                $('#preview-image').html(this.files[0].name);
+            }
+        });
+    </script>
 @endpush

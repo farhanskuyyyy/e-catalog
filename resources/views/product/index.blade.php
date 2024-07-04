@@ -32,7 +32,7 @@
                                         <th class="text-center">Name</th>
                                         <th class="text-center">Category</th>
                                         <th class="text-center">Price</th>
-                                        <th class="text-center">Stok</th>
+                                        <th class="text-center">Stock</th>
                                         <th class="text-center">Estimated Time</th>
                                         <th class="text-center">Latest Update</th>
                                         <th class="text-center">Action</th>
@@ -87,7 +87,7 @@
                         data: 'price',
                     },
                     {
-                        data: 'stok',
+                        data: 'stock',
                     },
                     {
                         data: null,
