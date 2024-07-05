@@ -10,6 +10,8 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PortalController::class, 'index'])->name('portal');
+Route::post('/create-order', [PortalController::class, 'createOrder'])->name('create-order');
+Route::get('/check-order', [PortalController::class, 'checkOrder'])->name('check-order');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

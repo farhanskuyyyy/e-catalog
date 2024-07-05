@@ -110,7 +110,6 @@
         </div>
         <div class="offcanvas-body small">
             <div class="list-group">
-
             </div>
             <a href="#" class="list-group-item list-group-item-action bg-secondary" aria-current="true">
                 <div class="d-flex w-100 justify-content-between">
@@ -123,7 +122,7 @@
                 </div>
             </a>
             <hr class="my-3">
-            <form action="" method="POST">
+            <form action="{{ route('create-order') }}" method="POST" id="cart-form">
                 @csrf
                 <div class="form-group">
                     <label for="name">Jenis Pesanan</label>
@@ -132,6 +131,16 @@
                         @foreach ($shippings as $shipping)
                             <option value="{{ $shipping }}" {{ $shipping == old('shipping') ? 'selected' : '' }}>
                                 {{ $shipping }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="payment">Jenis Pembayaran</label>
+                    <select name="payment" id="payment" class="form-control" required>
+                        <option value="">Select Jenis Pembayaran</option>
+                        @foreach ($payments as $payment)
+                            <option value="{{ $payment }}" {{ $payment == old('payment') ? 'selected' : '' }}>
+                                {{ $payment }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -168,6 +177,7 @@
     <!-- JS Libraies -->
     <script>
         $(document).ready(function() {
+            var base_url = $('meta[name=base_url]').attr('content');
             var id, name, price, quantity;
             var data = {};
             const addProductCanvas = new bootstrap.Offcanvas($('#addProduct'))
@@ -221,6 +231,65 @@
                     loadJumlahItem(false);
                     $(`#cart-total-harga-${id}`).text(convertCurrency(quantity * price))
                 }
+            })
+
+            $('#cart-form').submit(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: `${base_url}/create-order`,
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Please Wait !',
+                            html: 'Updating Data ...', // add html attribute if you want or remove
+                            allowOutsideClick: false,
+                            onBeforeOpen: () => {
+                                Swal.showLoading()
+                            },
+                        });
+                    },
+                    data: {
+                        products: data,
+                        note: $('#note').val(),
+                        name: $('#name').val(),
+                        phonenumber: $('#phonenumber').val(),
+                        shipping: $('#shipping :selected').val(),
+                        payment: $('#payment :selected').val(),
+                    },
+                    success: function(response) {
+                        if (response.status == true) {
+                            swal.fire({
+                                icon: "success",
+                                title: "Success!",
+                                text: response.message,
+                                timer: 2000
+                            });
+                            setTimeout(() => {
+                                window.location.replace(`${base_url}/check-order?order_code=${response.data.order_code}`);
+                            }, 2000);
+                        } else {
+                            swal.fire({
+                                icon: "error",
+                                title: "Error!",
+                                text: response.message,
+                                timer: 2000
+                            });
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        swal.fire({
+                            icon: "error",
+                            title: "Error!",
+                            text: "Server Error",
+                            timer: 2000
+                        });
+
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+
+                    },
+                });
             })
 
             function refreshPricePrepare() {

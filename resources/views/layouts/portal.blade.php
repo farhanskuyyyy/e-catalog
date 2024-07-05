@@ -36,8 +36,8 @@
                 <a href="#" class="nav-link sidebar-gone-show mt-4" data-toggle="sidebar"><i
                         class="fas fa-bars"></i></a>
                 <ul class="navbar-nav ">
-                    <li class="nav-item active"><a href="#" class="nav-link">Menu</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Check Status</a></li>
+                    <li class="nav-item"><a href="{{ route('portal') }}" class="nav-link">Menu</a></li>
+                    <li class="nav-item"><a href="{{ route('check-order') }}" class="nav-link">Check Status</a></li>
                 </ul>
             </nav>
 

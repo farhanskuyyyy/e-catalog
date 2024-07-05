@@ -17,10 +17,17 @@ class Order extends Model
         'shipping',
         'status',
         'pickup_at',
+        'total_amount',
+        'note',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function lists()
+    {
+        return $this->hasMany(OrderList::class, 'order_id','id');
     }
 }
