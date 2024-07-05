@@ -66,6 +66,11 @@
                                 <label for="pickup_at">Pickup At</label>
                                 <input type="text" name="pickup_at" id="pickup_at" class="form-control datetimepicker">
                             </div>
+                            <div class="form-group">
+                                <label for="note">Note</label>
+                                <input type="text" name="note" id="note" class="form-control"
+                                    value="{{ old('note') }}">
+                            </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
                     </div>

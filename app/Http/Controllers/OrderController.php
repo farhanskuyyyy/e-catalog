@@ -48,7 +48,6 @@ class OrderController extends Controller
             'payment' => ['required'],
             'shipping' => ['required'],
             'status' => ['required'],
-            'pickup_at' => ['required']
         ]);
 
         try {
@@ -60,7 +59,8 @@ class OrderController extends Controller
                     "payment" => $request->input('payment'),
                     "shipping" => $request->input('shipping'),
                     "status" => $request->input('status'),
-                    "pickup_at" => $request->input('pickup_at'),
+                    "pickup_at" => $request->input('pickup_at') ?? null,
+                    "note" => $request->input('note') ?? null,
                 ]);
 
                 if (!$insert) {
@@ -83,7 +83,7 @@ class OrderController extends Controller
     public function show($order)
     {
         try {
-            $findOrder = Order::find($order);
+            $findOrder = Order::with(['user','lists'])->find($order);
             return view('order.show', compact('findOrder'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error', "Data Not Found");
@@ -124,7 +124,7 @@ class OrderController extends Controller
             'payment' => ['required'],
             'shipping' => ['required'],
             'status' => ['required'],
-            'pickup_at' => ['required']
+            // 'pickup_at' => ['required']
         ]);
 
         try {
@@ -140,7 +140,8 @@ class OrderController extends Controller
                     "payment" => $request->input('payment'),
                     "shipping" => $request->input('shipping'),
                     "status" => $request->input('status'),
-                    "pickup_at" => $request->input('pickup_at'),
+                    "pickup_at" => $request->input('pickup_at') ?? null,
+                    "note" => $request->input('note') ?? null,
                 ]);
 
                 if (!$update) {

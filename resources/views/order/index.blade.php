@@ -119,7 +119,7 @@
                         data: null,
                         class: 'text-center',
                         render: function(data) {
-                            return moment(data.pickup_at).format('YYYY-MM-DD HH:mm:ss')
+                            return (data.pickup_at) ? moment(data.pickup_at).format('YYYY-MM-DD HH:mm:ss') : "-"
                         },
                     },
                     {

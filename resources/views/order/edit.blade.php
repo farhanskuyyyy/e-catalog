@@ -26,13 +26,18 @@
                         <form method="POST" action="{{ route('order.update', ['id' => $findOrder->id]) }}">
                             @csrf
                             <div class="form-group">
+                                <label for="order_code">Order Code</label>
+                                <input type="text" name="order_code" id="order_code" class="form-control" readonly
+                                    value="{{ $findOrder->order_code }}">
+                            </div>
+                            <div class="form-group">
                                 <label for="user">User</label>
                                 <select name="user" id="user" class="form-control" required>
                                     <option value="">Select User</option>
                                     @foreach ($users as $user)
                                         <option value="{{ $user->id }}"
                                             {{ $user->id == $findOrder->user->id ? 'selected' : '' }}>
-                                            {{ "{$user->name} ( {$user->email} )" }}
+                                            {{ "{$user->name} ( {$user->phonenumber} )" }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -75,6 +80,35 @@
                                 <input type="text" name="pickup_at" id="pickup_at" class="form-control datetimepicker"
                                     value="{{ $findOrder->pickup_at }}">
                             </div>
+                            <div class="form-group">
+                                <label for="note">Note</label>
+                                <input type="text" name="note" id="note" class="form-control"
+                                    value="{{ $findOrder->note }}">
+                            </div>
+                            <hr>
+                            <p>Order List</p>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Product Name</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($findOrder->lists as $key => $list)
+                                        <tr>
+                                            <th scope="row">{{ $key + 1 }}</th>
+                                            <td>{{ $list->product->name }}</td>
+                                            <td>Rp. {{ number_format($list->price, 2, ',', '.') }}</td>
+                                            <td>{{ $list->quantity }}</td>
+                                            <td>Rp. {{ number_format($list->price * $list->quantity, 2, ',', '.') }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
                     </div>

@@ -24,7 +24,8 @@
                 <form action="" method="get">
                     <div class="form-group">
                         <label for="order_code">Search</label>
-                        <input type="text" class="form-control" id="order_code" name="order_code" value="{{ (isset($order_code)) ? $order_code : '' }}">
+                        <input type="text" class="form-control" id="order_code" name="order_code"
+                            value="{{ isset($order_code) ? $order_code : '' }}">
                     </div>
                     <button type="submit" class="btn btn-primary">Search</button>
                 </form>
@@ -37,16 +38,33 @@
                     <p>Shipping : {{ $order->shipping }}</p>
                     <p>Status : {{ $order->status }}</p>
                     <p>Pickup At : {{ $order->pickup_at }}</p>
-                    <p>Total Amount : {{ $order->total_amount }}</p>
+                    <p>Total Amount : Rp. {{ number_format($order->total_amount, 2, ',', '.') }}</p>
                     <p>Note : {{ $order->note }}</p>
                     <hr>
                     <br>
                     <p>Order List</p>
-                    @foreach ($order->lists as $key => $list)
-                    <p>{{ ($key+1) .". ". $list->product->name }}</p>
-                    <p>Price : {{ $list->price }}</p>
-                    <p>Quantity : {{ $list->quantity }}</p>
-                    @endforeach
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">No</th>
+                                <th scope="col">Product Name</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($order->lists as $key => $list)
+                                <tr>
+                                    <th scope="row">{{ $key + 1 }}</th>
+                                    <td>{{ $list->product->name }}</td>
+                                    <td>Rp. {{ number_format($list->price, 2, ',', '.') }}</td>
+                                    <td>{{ $list->quantity }}</td>
+                                    <td>Rp. {{ number_format($list->price * $list->quantity, 2, ',', '.') }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 @endif
             </div>
         </div>
