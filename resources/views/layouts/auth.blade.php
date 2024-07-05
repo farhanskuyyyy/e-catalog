@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
         name="viewport">
+    <link rel="shortcut icon" href="{{ asset('img/logo-no-background.svg')}}" type="image/x-icon">
     <title>@yield('title') &mdash; {{ config('app.name', 'Laravel') }}</title>
 
     <!-- General CSS Files -->

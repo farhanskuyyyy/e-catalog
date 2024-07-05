@@ -6,7 +6,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="base_url" content="{{ url('/') }}">
-    <link rel="shortcut icon" href="{{ asset('img/logo-no-background.svg')}}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('img/logo-no-background.svg') }}" type="image/x-icon">
     <title>@yield('title') &mdash; {{ config('app.name', 'Laravel') }}</title>
 
     <!-- General CSS Files -->
@@ -18,29 +18,40 @@
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css"
         href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css">
+
     @stack('style')
 
     <!-- Template CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components.css') }}">
-
-</head>
 </head>
 
-<body>
+<body class="layout-3">
     <div id="app">
-        <div class="main-wrapper">
-            <!-- Header -->
-            @include('components.header')
+        <div class="main-wrapper container">
+            <div class="navbar-bg"></div>
+            <nav class="navbar navbar-expand-lg main-navbar">
+                <a href="#" class="navbar-brand sidebar-gone-hide"><img src="{{ asset('img/logo-black.png') }}"
+                        alt="logo" width="50" class="shadow-light rounded-circle"></a>
+                <a href="#" class="nav-link sidebar-gone-show mt-4" data-toggle="sidebar"><i
+                        class="fas fa-bars"></i></a>
+                <ul class="navbar-nav ">
+                    <li class="nav-item active"><a href="#" class="nav-link">Menu</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Check Status</a></li>
+                </ul>
+            </nav>
 
-            <!-- Sidebar -->
-            @include('components.sidebar')
-
-            <!-- Content -->
+            <!-- Main Content -->
             @yield('main')
 
-            <!-- Footer -->
-            @include('components.footer')
+            <footer class="main-footer">
+                <div class="footer-left">
+                    Copyright &copy; 2024 <div class="bullet"></div>{{ config('app.name', 'Laravel') }}
+                </div>
+                <div class="footer-right">
+                </div>
+            </footer>
+
         </div>
     </div>
 
@@ -91,7 +102,7 @@
             </div>
         </div>
     @endif
-    {{-- end error validation --}}
+
     <!-- General JS Scripts -->
     <script src="{{ asset('library/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('library/popper.js/dist/umd/popper.js') }}"></script>
@@ -104,6 +115,7 @@
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
+
     @stack('scripts')
 
     <!-- Template JS File -->
