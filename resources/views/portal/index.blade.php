@@ -64,7 +64,8 @@
                                                         data-bs-toggle="offcanvas" data-bs-target="#addProduct"
                                                         aria-controls="addProduct" data-id="{{ $product->id }}"
                                                         data-price="{{ $product->price }}"
-                                                        data-name="{{ $product->name }}">Add
+                                                        data-name="{{ $product->name }}"
+                                                        data-stock="{{ $product->stock }}">Add
                                                         Product</button>
                                                 </div>
                                             </div>
@@ -197,16 +198,21 @@
             })
 
             $('.add-product').click(function() {
+                $('#pre-input-quantity').val(1)
                 id = $(this).attr('data-id');
                 name = $(this).attr('data-name')
                 price = $(this).attr('data-price')
                 quantity = $('#pre-input-quantity').val();
-
+                var stock = $(this).attr('data-stock')
+                $('#pre-input-quantity').attr('max', stock)
                 $('#pre-product-label').text(name);
                 refreshPricePrepare()
             })
 
             $('#pre-input-quantity').change(function() {
+                if (parseInt($(this).attr('max')) < parseInt($(this).val())) {
+                    $(this).val($(this).attr('max'))
+                }
                 quantity = $(this).val();
                 refreshPricePrepare()
             })
@@ -265,7 +271,9 @@
                                 timer: 2000
                             });
                             setTimeout(() => {
-                                window.location.replace(`${base_url}/check-order?order_code=${response.data.order_code}`);
+                                window.location.replace(
+                                    `${base_url}/check-order?order_code=${response.data.order_code}`
+                                    );
                             }, 2000);
                         } else {
                             swal.fire({

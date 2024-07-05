@@ -63,11 +63,13 @@ class PortalController extends Controller
 
             try {
                 DB::beginTransaction();
+                // create or update user
                 $user = User::updateOrCreate(
                     ['phonenumber' => $request->input('phonenumber')],
                     ['name' => $request->input('name'), "password" => Hash::make("password")]
                 );
 
+                // create order
                 $order = Order::create([
                     "order_code" => "INV-" . time() . Str::random(5),
                     "user_id" => $user->id,
@@ -81,20 +83,31 @@ class PortalController extends Controller
                 $total_amount = 0;
 
                 foreach ($request->input('products') as $key => $product) {
+                    // find product for safety
                     $findProduct = Product::find($product['id']);
+                    if ($findProduct->stock < $product['quantity']) {
+                        throw new Exception("Product {$findProduct->name} Out of Stock");
+                    }
                     $total_amount += $product['quantity'] * $findProduct->price;
 
+                    // save order list
                     $orderList = OrderList::create([
                         "order_id" => $order->id,
                         "product_id" => $findProduct->id,
                         "price" => $findProduct->price,
                         "quantity" => $product['quantity']
                     ]);
+
+                    // minus stock
+                    $findProduct->stock -= $product['quantity'];
+                    $findProduct->save();
                 }
 
+                // update total amount order
                 $updateOrder = Order::find($order->id)->update([
                     "total_amount" => $total_amount
                 ]);
+
                 DB::commit();
             } catch (\Throwable $th) {
                 DB::rollBack();
