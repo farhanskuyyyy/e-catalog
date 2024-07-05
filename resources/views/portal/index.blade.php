@@ -47,15 +47,33 @@
                             <h4>{{ $category->name }}</h4>
                         </div>
                         <div class="card-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
-                                data-bs-target="#addProduct" aria-controls="addProduct">Toggle bottom
-                                offcanvas</button>
+                            <div class="row">
+                                @if (count($category->products) > 0)
+                                    @foreach ($category->products as $product)
+                                        <div class="col-lg-3 col-md-4 col-sm-6">
+                                            <div class="card text-center border" style="width: 18rem;">
+                                                <img src="{{ asset('storage/product/' . $product->image) }}" alt=""
+                                                    class="p-4" style="width: 100%;height:100%;"
+                                                    onerror="this.src='https://placehold.co/100x100'">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ $product->name }}</h5>
+                                                    <p class="card-text">{{ $product->description }}</p>
+                                                    <p class="card-text">Rp.
+                                                        {{ number_format($product->price, 2, ',', '.') }}</p>
+                                                    <button class="btn btn-primary add-product" type="button"
+                                                        data-bs-toggle="offcanvas" data-bs-target="#addProduct"
+                                                        aria-controls="addProduct" data-id="{{ $product->id }}"
+                                                        data-price="{{ $product->price }}"
+                                                        data-name="{{ $product->name }}">Add
+                                                        Product</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <p>Data Not Found</p>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -63,23 +81,71 @@
         </section>
     </div>
 
-    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="addProduct" aria-labelledby="addProductLabel">
+    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="addProduct" aria-labelledby="addProductLabel"
+        style="height: 20vh">
         <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="addProductLabel">Input Jumlah</h5>
+            <h5 class="offcanvas-title" id="pre-product-label">Product Name</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body small">
-            ...
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="number" name="pre-input-quantity" id="pre-input-quantity" class="form-control"
+                        min="1" value="1">
+                </div>
+                <div class="col-md-8 mt-2">
+                    <button type="button" id="pre-input-button" class="btn btn-primary w-100">
+                        Add <span id="pre-price-product"></span>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="showList" aria-labelledby="showListLabel">
+    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="showList" aria-labelledby="showListLabel"
+        style="height: 55vh">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="showListLabel">List Pesanan</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body small">
-            ...
+            <div class="list-group">
+
+            </div>
+            <a href="#" class="list-group-item list-group-item-action bg-secondary" aria-current="true">
+                <div class="d-flex w-100 justify-content-between">
+                    <div class="div">
+                        <h5 class="">Total Semua</h5>
+                    </div>
+                    <div class="" style="width:100px;">
+                        <p class="cart-total-harga">Rp. 0</p>
+                    </div>
+                </div>
+            </a>
+            <hr class="my-3">
+            <form action="" method="POST">
+                @csrf
+                <div class="form-group">
+                    <label for="name">Jenis Pesanan</label>
+                    <select name="shipping" id="shipping" class="form-control" required>
+                        <option value="">Select Jenis Pesanan</option>
+                        @foreach ($shippings as $shipping)
+                            <option value="{{ $shipping }}" {{ $shipping == old('shipping') ? 'selected' : '' }}>
+                                {{ $shipping }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="name">Nama Pesanan</label>
+                    <input type="text" class="form-control mb-1" id="name" name="name" required
+                        placeholder="Masukkan Nama" value="{{ old('name') }}">
+                    <input type="text" class="form-control mb-1" id="phonenumber" name="phonenumber" required
+                        placeholder="Masukkan Nomor Telepon" value="{{ old('phonenumber') }}">
+                    <input type="text" class="form-control" id="note" name="note" required
+                        placeholder="Masukkan Catatan" value="{{ old('note') }}">
+                </div>
+                <button class="btn btn-primary" type="submit">Pesan</button>
+            </form>
         </div>
     </div>
 
@@ -89,9 +155,9 @@
     <div class="sticky-footer bg-primary">
         <div class="container">
             <div class="total-price">
-                <span>Jumlah Item : 1</span>
+                <span>Jumlah Item : <span id="cart-total-item">0</span></span>
                 <br>
-                <span>Total: Rp 55,000</span>
+                <span>Total : <span class="cart-total-harga">0</span></span>
             </div>
             <div>
                 <a href="#" class="text-white" style="text-decoration: none;" data-bs-toggle="offcanvas"
@@ -102,6 +168,11 @@
     <!-- JS Libraies -->
     <script>
         $(document).ready(function() {
+            var id, name, price, quantity;
+            var data = {};
+            const addProductCanvas = new bootstrap.Offcanvas($('#addProduct'))
+            const showListCanvas = new bootstrap.Offcanvas($('#showList'))
+
             $('.nav-category').click(function() {
 
                 $('.nav-category').removeClass('active');
@@ -114,6 +185,102 @@
                 $('.card-category').hide();
                 $(`#${card_id}`).show();
             })
+
+            $('.add-product').click(function() {
+                id = $(this).attr('data-id');
+                name = $(this).attr('data-name')
+                price = $(this).attr('data-price')
+                quantity = $('#pre-input-quantity').val();
+
+                $('#pre-product-label').text(name);
+                refreshPricePrepare()
+            })
+
+            $('#pre-input-quantity').change(function() {
+                quantity = $(this).val();
+                refreshPricePrepare()
+            })
+
+            $('#pre-input-button').click(function(event) {
+                addProductCanvas.hide()
+                addProduct(id, quantity, name, price)
+                loadJumlahItem();
+            })
+
+            $('.list-group').on('change', '.cart-input-quantity', function() {
+                quantity = parseInt($(this).val());
+                id = $(this).attr('data-id');
+                if (quantity === 0) {
+                    if (data.hasOwnProperty("prod" + id)) {
+                        delete data["prod" + id];
+                        loadJumlahItem();
+                    }
+                } else {
+                    price = $(this).attr('data-price');
+                    data["prod" + id].quantity = quantity;
+                    loadJumlahItem(false);
+                    $(`#cart-total-harga-${id}`).text(convertCurrency(quantity * price))
+                }
+            })
+
+            function refreshPricePrepare() {
+                $('#pre-price-product').text(convertCurrency(quantity * price));
+            }
+
+            function loadJumlahItem(withAppendProduct = true) {
+                var html = "";
+                var harga = 0;
+                var totalItem = 0;
+                Object.keys(data).forEach(function(key) {
+                    var totalHargaProduct = data[key].quantity * data[key].price;
+                    html += `<a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <div class="div">
+                                        <h5 class="">${data[key].name}</h5>
+                                        <p class="">${convertCurrency(data[key].price)}</p>
+                                    </div>
+                                    <div class="" style="width:100px;">
+                                        <input type="number" class="form-control cart-input-quantity" value="${data[key].quantity}" data-id="${data[key].id}" data-price="${data[key].price}">
+                                        <p class="" id="cart-total-harga-${data[key].id}">${convertCurrency(totalHargaProduct)}</p>
+                                    </div>
+                                </div>
+                            </a>`
+                    harga += totalHargaProduct;
+                    totalItem += 1;
+                });
+
+                if (withAppendProduct) {
+                    $('.list-group').html(html);
+                }
+
+                $('#cart-total-item').text(totalItem);
+                $('.cart-total-harga').text(convertCurrency(harga));
+            }
+
+            function addProduct(id, quantity, name = "", price = "") {
+                var key = "prod" + id;
+                if (data[key]) {
+                    // If the product already exists, update the quantity
+                    data[key].quantity += parseInt(quantity);
+                } else {
+                    // If the product does not exist, add it as a new entry
+                    data[key] = {
+                        "id": parseInt(id),
+                        "name": name,
+                        "price": parseInt(price),
+                        "quantity": parseInt(quantity)
+                    };
+                }
+            }
+
+            function convertCurrency(price) {
+                return new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR'
+                }).format(
+                    price,
+                );
+            }
         })
     </script>
     <!-- Page Specific JS File -->

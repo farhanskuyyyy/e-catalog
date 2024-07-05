@@ -10,6 +10,9 @@ class PortalController extends Controller
     public function index(Request $request)
     {
         $categories = Category::with('products')->get();
-        return view('portal.index',compact('categories'));
+        $shippings = [
+            "AMBIL SENDIRI", "DIANTAR"
+        ];
+        return view('portal.index',compact('categories','shippings'));
     }
 }
