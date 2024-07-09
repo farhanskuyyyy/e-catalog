@@ -21,6 +21,68 @@
             justify-content: space-between;
             align-items: center;
         }
+
+        input,
+        textarea {
+            border: 1px solid #eeeeee;
+            box-sizing: border-box;
+            margin: 0;
+            outline: none;
+            padding: 10px;
+        }
+
+        input[type="button"] {
+            -webkit-appearance: button;
+            cursor: pointer;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+
+        .group-input {
+            clear: both;
+            /* margin: 15px 0; */
+            position: relative;
+        }
+
+        .group-input input[type='button'] {
+            background-color: #eeeeee;
+            min-width: 38px;
+            width: auto;
+            transition: all 300ms ease;
+        }
+
+        .group-input .button-minus,
+        .group-input .button-plus {
+            font-weight: bold;
+            height: 38px;
+            padding: 0;
+            width: 38px;
+            position: relative;
+        }
+
+        .group-input .quantity-field {
+            position: relative;
+            height: 38px;
+            left: -6px;
+            text-align: center;
+            width: 62px;
+            display: inline-block;
+            font-size: 13px;
+            margin: 0 0;
+            resize: vertical;
+        }
+
+        .button-plus {
+            left: -13px;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+            -webkit-appearance: none;
+        }
     </style>
 @endpush
 
@@ -50,7 +112,7 @@
                             <div class="row">
                                 @if (count($category->products) > 0)
                                     @foreach ($category->products as $product)
-                                        <div class="col-lg-3 col-md-4 col-sm-6">
+                                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                                             <div class="card text-center border" style="width: 18rem;">
                                                 <img src="{{ asset('storage/product/' . $product->image) }}" alt=""
                                                     class="p-4" style="width: 100%;height:100%;"
@@ -90,11 +152,15 @@
         </div>
         <div class="offcanvas-body small">
             <div class="row">
-                <div class="col-md-4">
-                    <input type="number" name="pre-input-quantity" id="pre-input-quantity" class="form-control"
-                        min="1" value="1">
+                <div class="col-5 col-md-2">
+                    <div class="group-input">
+                        <input type="button" value="-" class="button-minus" data-field="pre-input-quantity">
+                        <input type="number" step="1" max="" value="1" name="pre-input-quantity"
+                            id="pre-input-quantity" class="quantity-field">
+                        <input type="button" value="+" class="button-plus" data-field="pre-input-quantity">
+                    </div>
                 </div>
-                <div class="col-md-8 mt-2">
+                <div class="col-7 col-md-10 mt-2">
                     <button type="button" id="pre-input-button" class="btn btn-primary w-100">
                         Add <span id="pre-price-product"></span>
                     </button>
@@ -113,11 +179,11 @@
             <div class="list-group">
             </div>
             <a href="#" class="list-group-item list-group-item-action bg-secondary" aria-current="true">
-                <div class="d-flex w-100 justify-content-between">
-                    <div class="div">
+                <div class="row">
+                    <div class="col-6 col-md-9">
                         <h5 class="">Total Semua</h5>
                     </div>
-                    <div class="" style="width:100px;">
+                    <div class="col-6 col-md-3">
                         <p class="cart-total-harga">Rp. 0</p>
                     </div>
                 </div>
@@ -179,13 +245,21 @@
     <script>
         $(document).ready(function() {
             var base_url = $('meta[name=base_url]').attr('content');
-            var id, name, price, quantity;
+            var id, name, price, quantity, stock;
             var data = {};
             const addProductCanvas = new bootstrap.Offcanvas($('#addProduct'))
             const showListCanvas = new bootstrap.Offcanvas($('#showList'))
 
-            $('.nav-category').click(function() {
+            // input
+            $(document).on('click', '.button-plus', function(e) {
+                incrementValue(e);
+            });
 
+            $(document).on('click', '.button-minus', function(e) {
+                decrementValue(e);
+            });
+
+            $('.nav-category').click(function() {
                 $('.nav-category').removeClass('active');
                 $(this).addClass('active');
 
@@ -203,7 +277,7 @@
                 name = $(this).attr('data-name')
                 price = $(this).attr('data-price')
                 quantity = $('#pre-input-quantity').val();
-                var stock = $(this).attr('data-stock')
+                stock = $(this).attr('data-stock')
                 $('#pre-input-quantity').attr('max', stock)
                 $('#pre-product-label').text(name);
                 refreshPricePrepare()
@@ -219,7 +293,7 @@
 
             $('#pre-input-button').click(function(event) {
                 addProductCanvas.hide()
-                addProduct(id, quantity, name, price)
+                addProduct(id, quantity, name, price, stock)
                 loadJumlahItem();
             })
 
@@ -232,6 +306,10 @@
                         loadJumlahItem();
                     }
                 } else {
+                    if (parseInt(data["prod" + id].stock) < parseInt(quantity)) {
+                        quantity = data["prod" + id].stock;
+                        $(this).val(quantity)
+                    }
                     price = $(this).attr('data-price');
                     data["prod" + id].quantity = quantity;
                     loadJumlahItem(false);
@@ -264,6 +342,7 @@
                     },
                     success: function(response) {
                         if (response.status == true) {
+                            showListCanvas.hide()
                             swal.fire({
                                 icon: "success",
                                 title: "Success!",
@@ -273,7 +352,7 @@
                             setTimeout(() => {
                                 window.location.replace(
                                     `${base_url}/check-order?order_code=${response.data.order_code}`
-                                    );
+                                );
                             }, 2000);
                         } else {
                             swal.fire({
@@ -300,6 +379,32 @@
                 });
             })
 
+            function incrementValue(e) {
+                e.preventDefault();
+                var fieldName = $(e.target).data('field');
+                var parent = $(e.target).closest('div');
+                var currentVal = parseInt(parent.find('input[name=' + fieldName + ']').val(), 10);
+
+                if (!isNaN(currentVal)) {
+                    parent.find('input[name=' + fieldName + ']').val(currentVal + 1).change();
+                } else {
+                    parent.find('input[name=' + fieldName + ']').val(0).change();
+                }
+            }
+
+            function decrementValue(e) {
+                e.preventDefault();
+                var fieldName = $(e.target).data('field');
+                var parent = $(e.target).closest('div');
+                var currentVal = parseInt(parent.find('input[name=' + fieldName + ']').val(), 10);
+
+                if (!isNaN(currentVal) && currentVal > 0) {
+                    parent.find('input[name=' + fieldName + ']').val(currentVal - 1).change();
+                } else {
+                    parent.find('input[name=' + fieldName + ']').val(0).change();
+                }
+            }
+
             function refreshPricePrepare() {
                 $('#pre-price-product').text(convertCurrency(quantity * price));
             }
@@ -311,13 +416,18 @@
                 Object.keys(data).forEach(function(key) {
                     var totalHargaProduct = data[key].quantity * data[key].price;
                     html += `<a href="#" class="list-group-item list-group-item-action" aria-current="true">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <div class="div">
+                                <div class="row">
+                                    <div class="col-6 col-md-9">
                                         <h5 class="">${data[key].name}</h5>
                                         <p class="">${convertCurrency(data[key].price)}</p>
                                     </div>
-                                    <div class="" style="width:100px;">
-                                        <input type="number" class="form-control cart-input-quantity" value="${data[key].quantity}" data-id="${data[key].id}" data-price="${data[key].price}">
+                                    <div class="col-6 col-md-3">
+                                        <div class="group-input">
+                                            <input type="button" value="-" class="button-minus" data-field="input-quantity-${data[key].id}">
+                                            <input type="number" step="1" max="" name="input-quantity-${data[key].id}" value="${data[key].quantity}" data-id="${data[key].id}" data-price="${data[key].price}"
+                                                class="quantity-field cart-input-quantity">
+                                            <input type="button" value="+" class="button-plus" data-field="input-quantity-${data[key].id}">
+                                        </div>
                                         <p class="" id="cart-total-harga-${data[key].id}">${convertCurrency(totalHargaProduct)}</p>
                                     </div>
                                 </div>
@@ -334,7 +444,7 @@
                 $('.cart-total-harga').text(convertCurrency(harga));
             }
 
-            function addProduct(id, quantity, name = "", price = "") {
+            function addProduct(id, quantity, name = "", price = "", stock = 1) {
                 var key = "prod" + id;
                 if (data[key]) {
                     // If the product already exists, update the quantity
@@ -345,7 +455,8 @@
                         "id": parseInt(id),
                         "name": name,
                         "price": parseInt(price),
-                        "quantity": parseInt(quantity)
+                        "quantity": parseInt(quantity),
+                        "stock": parseInt(stock),
                     };
                 }
             }
