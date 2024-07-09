@@ -22,6 +22,21 @@
             align-items: center;
         }
 
+        .card-body {
+            padding: 0.5rem;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-text {
+            font-size: 0.85rem;
+            margin-bottom: 0.1rem;
+            /* Reduce margin between paragraphs */
+        }
+
         input,
         textarea {
             border: 1px solid #eeeeee;
@@ -112,23 +127,26 @@
                             <div class="row">
                                 @if (count($category->products) > 0)
                                     @foreach ($category->products as $product)
-                                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                                            <div class="card text-center border" style="width: 18rem;">
+                                        <div class="row mb-3 ">
+                                            <div class="col-5 col-md-2">
                                                 <img src="{{ asset('storage/product/' . $product->image) }}" alt=""
-                                                    class="p-4" style="width: 100%;height:100%;"
-                                                    onerror="this.src='https://placehold.co/100x100'">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">{{ $product->name }}</h5>
-                                                    <p class="card-text">{{ $product->description }}</p>
-                                                    <p class="card-text">Rp.
-                                                        {{ number_format($product->price, 2, ',', '.') }}</p>
-                                                    <button class="btn btn-primary add-product" type="button"
+                                                class="p-4" style="width: 120px;height:120px;"
+                                                onerror="this.src='https://placehold.co/100x100'">
+                                            </div>
+                                            <div class="col-7 col-md-8">
+                                                <h5 class="card-title">{{ $product->name }}</h5>
+                                                <p class="card-text">{{ $product->description }}</p>
+                                                <p class="card-text">Rp. {{ number_format($product->price, 2, ',', '.') }}</p>
+                                            </div>
+                                            <div class="col-12 col-md-2">
+                                                <div class="d-flex">
+                                                    <button class="btn btn-primary add-product ms-auto" type="button"
                                                         data-bs-toggle="offcanvas" data-bs-target="#addProduct"
                                                         aria-controls="addProduct" data-id="{{ $product->id }}"
                                                         data-price="{{ $product->price }}"
                                                         data-name="{{ $product->name }}"
-                                                        data-stock="{{ $product->stock }}">Add
-                                                        Product</button>
+                                                        data-stock="{{ $product->stock }}">Add <span
+                                                        class="text-white">+</span></button>
                                                 </div>
                                             </div>
                                         </div>
