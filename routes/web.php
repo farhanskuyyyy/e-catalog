@@ -1,13 +1,16 @@
 <?php
 
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\DashboardController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PortalController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MerchantController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PermissionController;
 
 Route::get('/', [PortalController::class, 'index'])->name('portal');
 Route::post('/create-order', [PortalController::class, 'createOrder'])->name('create-order');
@@ -19,8 +22,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::prefix("category")
-        ->name("category.")
+    Route::resource('roles', RoleController::class);
+    Route::resource('permissions', PermissionController::class);
+    Route::resource('merchants', MerchantController::class);
+
+    Route::prefix("categories")
+        ->name("categories.")
         ->controller(CategoryController::class)
         ->group(function () {
             Route::get("/", "index")->name("index");
@@ -33,8 +40,8 @@ Route::middleware('auth')->group(function () {
             Route::get("/list", "getDataList")->name("list");
         });
 
-    Route::prefix("product")
-        ->name("product.")
+    Route::prefix("products")
+        ->name("products.")
         ->controller(ProductController::class)
         ->group(function () {
             Route::get("/", "index")->name("index");
@@ -47,8 +54,8 @@ Route::middleware('auth')->group(function () {
             Route::get("/list", "getDataList")->name("list");
         });
 
-    Route::prefix("order")
-        ->name("order.")
+    Route::prefix("orders")
+        ->name("orders.")
         ->controller(OrderController::class)
         ->group(function () {
             Route::get("/", "index")->name("index");
@@ -61,8 +68,8 @@ Route::middleware('auth')->group(function () {
             Route::get("/list", "getDataList")->name("list");
         });
 
-    Route::prefix("user")
-        ->name("user.")
+    Route::prefix("users")
+        ->name("users.")
         ->controller(UserController::class)
         ->group(function () {
             Route::get("/", "index")->name("index");
@@ -76,4 +83,4 @@ Route::middleware('auth')->group(function () {
         });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

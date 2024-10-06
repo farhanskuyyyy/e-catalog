@@ -14,7 +14,7 @@
                 <h1>Product</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('product.index') }}">Product</a></div>
+                    <div class="breadcrumb-item"><a href="{{ route('products.index') }}">Product</a></div>
                     <div class="breadcrumb-item">Index</div>
                 </div>
             </div>
@@ -22,7 +22,7 @@
             <div class="section-body">
                 <div class="card">
                     <div class="card-header">
-                        <a href="{{ route('product.create') }}" class="btn btn-success">Add Product</a>
+                        <a href="{{ route('products.create') }}" class="btn btn-success">Add Product</a>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -61,7 +61,7 @@
             $("#table-product").DataTable({
                 ajax: {
                     'type': 'get',
-                    'url': "{{ route('product.list') }}",
+                    'url': "{{ route('products.list') }}",
                     'data': {
                         // "dates": dates,
                     }
@@ -81,7 +81,7 @@
                         data: 'name',
                     },
                     {
-                        data: 'category.name',
+                        data: 'categories.name',
                     },
                     {
                         data: 'price',

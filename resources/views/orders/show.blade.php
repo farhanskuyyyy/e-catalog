@@ -12,7 +12,7 @@
                 <h1>Show Order</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('order.index') }}">Order</a></div>
+                    <div class="breadcrumb-item"><a href="{{ route('orders.index') }}">Order</a></div>
                     <div class="breadcrumb-item">Show</div>
                 </div>
             </div>
@@ -90,7 +90,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <a href="{{ route('order.index') }}" class="btn btn-primary">Back</a>
+                        <a href="{{ route('orders.index') }}" class="btn btn-primary">Back</a>
                     </div>
                 </div>
             </div>

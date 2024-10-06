@@ -12,7 +12,7 @@
                 <h1>Show Product</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('product.index') }}">Product</a></div>
+                    <div class="breadcrumb-item"><a href="{{ route('products.index') }}">Product</a></div>
                     <div class="breadcrumb-item">Show</div>
                 </div>
             </div>
@@ -58,7 +58,7 @@
                             <textarea class="form-control " name="description" id="description" cols="40" rows="30" style="height: 100px"
                                 readonly>{{ $findProduct->description }}</textarea>
                         </div>
-                        <a href="{{ route('product.index') }}" class="btn btn-primary">Back</a>
+                        <a href="{{ route('products.index') }}" class="btn btn-primary">Back</a>
                     </div>
                 </div>
             </div>

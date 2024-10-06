@@ -82,7 +82,7 @@
                         <div class="card-header">
                             <h4>Orders</h4>
                             <div class="card-header-action">
-                                <a href="{{ route('order.index') }}" class="btn btn-danger">View More <i
+                                <a href="{{ route('orders.index') }}" class="btn btn-danger">View More <i
                                         class="fas fa-chevron-right"></i></a>
                             </div>
                         </div>
@@ -126,7 +126,7 @@
                                             </td>
                                             <td>{{ $order->pickup_at }}</td>
                                             <td>
-                                                <a href="{{ route('order.show', ['id' => $order->id]) }}"
+                                                <a href="{{ route('orders.show', ['id' => $order->id]) }}"
                                                     class="btn btn-primary">Detail</a>
                                             </td>
                                         </tr>

@@ -14,7 +14,7 @@
                 <h1>User</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('user.index') }}">User</a></div>
+                    <div class="breadcrumb-item"><a href="{{ route('users.index') }}">User</a></div>
                     <div class="breadcrumb-item">Index</div>
                 </div>
             </div>
@@ -22,7 +22,7 @@
             <div class="section-body">
                 <div class="card">
                     <div class="card-header">
-                        <a href="{{ route('user.create') }}" class="btn btn-success">Add User</a>
+                        <a href="{{ route('users.create') }}" class="btn btn-success">Add User</a>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -60,7 +60,7 @@
             $("#table-user").DataTable({
                 ajax: {
                     'type': 'get',
-                    'url': "{{ route('user.list') }}",
+                    'url': "{{ route('users.list') }}",
                     'data': {
                         // "dates": dates,
                     }

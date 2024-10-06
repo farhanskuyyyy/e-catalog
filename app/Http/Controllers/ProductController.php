@@ -17,7 +17,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('product.index');
+        return view('products.index');
     }
 
     /**
@@ -26,7 +26,7 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('product.create',compact('categories'));
+        return view('products.create',compact('categories'));
     }
 
     /**
@@ -76,7 +76,7 @@ class ProductController extends Controller
             } catch (\Exception $th) {
                 DB::rollBack();
             }
-            return redirect()->route('product.index')->with('success', "Success");
+            return redirect()->route('products.index')->with('success', "Success");
         } catch (\Exception $th) {
             return redirect()->back()->with('error', "Failed");
         }
@@ -89,7 +89,7 @@ class ProductController extends Controller
     {
         try {
             $findProduct = Product::find($product);
-            return view('product.show', compact('findProduct'));
+            return view('products.show', compact('findProduct'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error',"Data Not Found");
         }
@@ -103,7 +103,7 @@ class ProductController extends Controller
         try {
             $findProduct = Product::find($product);
             $categories = Category::all();
-            return view('product.edit', compact('findProduct','categories'));
+            return view('products.edit', compact('findProduct','categories'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error',"Data Not Found");
         }
@@ -171,7 +171,7 @@ class ProductController extends Controller
             } catch (\Exception $th) {
                 DB::rollBack();
             }
-            return redirect()->route('product.index')->with('success', "Success");
+            return redirect()->route('products.index')->with('success', "Success");
         } catch (\Exception $th) {
             return redirect()->back()->with('error', "Failed");
         }

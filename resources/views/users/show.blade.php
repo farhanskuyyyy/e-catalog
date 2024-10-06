@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Show Category')
+@section('title', 'Show User')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -9,10 +9,10 @@
 @section('main')<div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Show Category</h1>
+                <h1>Show User</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('category.index') }}">Category</a></div>
+                    <div class="breadcrumb-item"><a href="{{ route('users.index') }}">User</a></div>
                     <div class="breadcrumb-item">Show</div>
                 </div>
             </div>
@@ -24,10 +24,17 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name"
-                                value="{{ $findCategory->name }}" required readonly>
+                            <input type="text" class="form-control" id="name" name="name" readonly value="{{ $findUser->name }}">
                         </div>
-                        <a href="{{ route('category.index') }}" class="btn btn-primary">Back</a>
+                        <div class="form-group">
+                            <label for="phonenumber">Phonenumber</label>
+                            <input type="text" class="form-control" id="phonenumber" name="phonenumber" readonly value="{{ $findUser->phonenumber }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" readonly value="{{ $findUser->email }}">
+                        </div>
+                        <a href="{{ route('users.index') }}" class="btn btn-primary">Back</a>
                     </div>
                 </div>
             </div>

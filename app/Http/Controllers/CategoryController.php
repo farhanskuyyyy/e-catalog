@@ -14,7 +14,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('category.index');
+        return view('categories.index');
     }
 
     /**
@@ -22,7 +22,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('category.create');
+        return view('categories.create');
     }
 
     /**
@@ -49,7 +49,7 @@ class CategoryController extends Controller
             } catch (\Exception $th) {
                 DB::rollBack();
             }
-            return redirect()->route('category.index')->with('success', "Success");
+            return redirect()->route('categories.index')->with('success', "Success");
         } catch (\Exception $th) {
             return redirect()->back()->with('error', "Failed");
         }
@@ -62,7 +62,7 @@ class CategoryController extends Controller
     {
         try {
             $findCategory = Category::find($category);
-            return view('category.show', compact('findCategory'));
+            return view('categories.show', compact('findCategory'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error',"Data Not Found");
         }
@@ -75,7 +75,7 @@ class CategoryController extends Controller
     {
         try {
             $findCategory = Category::find($category);
-            return view('category.edit', compact('findCategory'));
+            return view('categories.edit', compact('findCategory'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error',"Data Not Found");
         }
@@ -110,7 +110,7 @@ class CategoryController extends Controller
             } catch (\Exception $th) {
                 DB::rollBack();
             }
-            return redirect()->route('category.index')->with('success', "Success");
+            return redirect()->route('categories.index')->with('success', "Success");
         } catch (\Exception $th) {
             return redirect()->back()->with('error', "Failed");
         }

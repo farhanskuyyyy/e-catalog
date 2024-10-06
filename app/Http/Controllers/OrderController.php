@@ -16,7 +16,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return view('order.index');
+        return view('orders.index');
     }
 
     /**
@@ -35,7 +35,7 @@ class OrderController extends Controller
             "PENDING", "PROCESS", "DONE", "DELIVERED", "CANCEL"
         ];
 
-        return view('order.create', compact('users', 'payments', 'shippings', 'status'));
+        return view('orders.create', compact('users', 'payments', 'shippings', 'status'));
     }
 
     /**
@@ -71,7 +71,7 @@ class OrderController extends Controller
             } catch (\Exception $th) {
                 DB::rollBack();
             }
-            return redirect()->route('order.index')->with('success', "Success");
+            return redirect()->route('orders.index')->with('success', "Success");
         } catch (\Exception $th) {
             return redirect()->back()->with('error', "Failed");
         }
@@ -84,7 +84,7 @@ class OrderController extends Controller
     {
         try {
             $findOrder = Order::with(['user','lists'])->find($order);
-            return view('order.show', compact('findOrder'));
+            return view('orders.show', compact('findOrder'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error', "Data Not Found");
         }
@@ -108,7 +108,7 @@ class OrderController extends Controller
                 "PENDING", "PROCESS", "DONE", "DELIVERED", "CANCEL"
             ];
 
-            return view('order.edit', compact('findOrder', 'users', 'payments', 'shippings', 'status'));
+            return view('orders.edit', compact('findOrder', 'users', 'payments', 'shippings', 'status'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error', "Data Not Found");
         }
@@ -152,7 +152,7 @@ class OrderController extends Controller
             } catch (\Exception $th) {
                 DB::rollBack();
             }
-            return redirect()->route('order.index')->with('success', "Success");
+            return redirect()->route('orders.index')->with('success', "Success");
         } catch (\Exception $th) {
             return redirect()->back()->with('error', "Failed");
         }

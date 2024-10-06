@@ -14,7 +14,7 @@
                 <h1>Order</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('order.index') }}">Order</a></div>
+                    <div class="breadcrumb-item"><a href="{{ route('orders.index') }}">Order</a></div>
                     <div class="breadcrumb-item">Index</div>
                 </div>
             </div>
@@ -22,7 +22,7 @@
             <div class="section-body">
                 <div class="card">
                     <div class="card-header">
-                        {{-- <a href="{{ route('order.create') }}" class="btn btn-success">Add Order</a> --}}
+                        {{-- <a href="{{ route('orders.create') }}" class="btn btn-success">Add Order</a> --}}
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -61,7 +61,7 @@
             $("#table-order").DataTable({
                 ajax: {
                     'type': 'get',
-                    'url': "{{ route('order.list') }}",
+                    'url': "{{ route('orders.list') }}",
                     'data': {
                         // "dates": dates,
                     }

@@ -12,7 +12,7 @@
                 <h1>Edit Product</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('product.index') }}">Product</a></div>
+                    <div class="breadcrumb-item"><a href="{{ route('products.index') }}">Product</a></div>
                     <div class="breadcrumb-item">Edit</div>
                 </div>
             </div>
@@ -22,7 +22,7 @@
                     <div class="card-header">
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('product.update',['id' => $findProduct->id]) }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('products.update',['id' => $findProduct->id]) }}" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label for="name">Name</label>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Create Category')
+@section('title', 'Edit User')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -9,11 +9,11 @@
 @section('main')<div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Create Category</h1>
+                <h1>Edit User</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('category.index') }}">Category</a></div>
-                    <div class="breadcrumb-item">Create</div>
+                    <div class="breadcrumb-item"><a href="{{ route('users.index') }}">User</a></div>
+                    <div class="breadcrumb-item">Edit</div>
                 </div>
             </div>
 
@@ -22,11 +22,19 @@
                     <div class="card-header">
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('category.store') }}">
+                        <form method="POST" action="{{ route('users.update',['id' => $findUser->id]) }}">
                             @csrf
                             <div class="form-group">
                                 <label for="name">Name</label>
-                                <input type="text" class="form-control" id="name" name="name" required value="{{ old('name') }}">
+                                <input type="text" class="form-control" id="name" name="name" required value="{{ $findUser->name }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="phonenumber">Phonenumber</label>
+                                <input type="text" class="form-control" id="phonenumber" name="phonenumber" value="{{ $findUser->phonenumber }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{ $findUser->email }}">
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>

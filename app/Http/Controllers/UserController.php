@@ -15,7 +15,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('user.index');
+        return view('users.index');
     }
 
     /**
@@ -23,7 +23,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('user.create');
+        return view('users.create');
     }
 
     /**
@@ -47,7 +47,7 @@ class UserController extends Controller
                 throw new Exception("Failed Insert User");
             }
 
-            return redirect()->route('user.index')->with('success', "Success");
+            return redirect()->route('users.index')->with('success', "Success");
         } catch (\Exception $th) {
             dd($th->getMessage());
             return redirect()->back()->with('error', "Failed");
@@ -61,7 +61,7 @@ class UserController extends Controller
     {
         try {
             $findUser = User::find($user);
-            return view('user.show', compact('findUser'));
+            return view('users.show', compact('findUser'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error', "Data Not Found");
         }
@@ -74,7 +74,7 @@ class UserController extends Controller
     {
         try {
             $findUser = User::find($user);
-            return view('user.edit', compact('findUser'));
+            return view('users.edit', compact('findUser'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error', "Data Not Found");
         }
@@ -111,7 +111,7 @@ class UserController extends Controller
             } catch (\Exception $th) {
                 DB::rollBack();
             }
-            return redirect()->route('user.index')->with('success', "Success");
+            return redirect()->route('users.index')->with('success', "Success");
         } catch (\Exception $th) {
             return redirect()->back()->with('error', "Failed");
         }
