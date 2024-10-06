@@ -30,7 +30,8 @@
             @include('components.header')
 
             <!-- Sidebar -->
-            @include('components.sidebar')
+            <livewire:navigation />
+            {{-- @include('components.sidebar') --}}
 
             <!-- Content -->
             @yield('main')
