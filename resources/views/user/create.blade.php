@@ -6,7 +6,8 @@
     <!-- CSS Libraries -->
 @endpush
 
-@section('main')<div class="main-content">
+@section('main')
+    <div class="main-content">
         <section class="section">
             <div class="section-header">
                 <h1>Create User</h1>
@@ -26,15 +27,18 @@
                             @csrf
                             <div class="form-group">
                                 <label for="name">Name</label>
-                                <input type="text" class="form-control" id="name" name="name" required value="{{ old('name') }}">
+                                <input type="text" class="form-control" id="name" name="name" required
+                                    value="{{ old('name') }}">
                             </div>
                             <div class="form-group">
                                 <label for="phonenumber">Phonenumber</label>
-                                <input type="text" class="form-control" id="phonenumber" name="phonenumber" value="{{ old('phonenumber') }}">
+                                <input type="text" class="form-control" id="phonenumber" name="phonenumber"
+                                    value="{{ old('phonenumber') }}">
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}">
+                                <input type="email" class="form-control" id="email" name="email"
+                                    value="{{ old('email') }}">
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
