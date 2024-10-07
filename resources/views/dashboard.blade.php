@@ -96,7 +96,7 @@
                                         <th>Pickup Date</th>
                                         <th>Action</th>
                                     </tr>
-                                    @foreach ($orders as $order)
+                                    @forelse ($orders as $order)
                                         <tr>
                                             <td><a href="#">{{ $order->order_code }}</a></td>
                                             <td class="font-weight-600">{{ $order->user->name }}</td>
@@ -105,6 +105,7 @@
                                                     @case('pending')
                                                         <div class="badge badge-warning rounded text-black">Pending</div>
                                                     @break
+
                                                     @case('process')
                                                         <div class="badge badge-primary rounded text-white">Process</div>
                                                     @break
@@ -126,29 +127,30 @@
                                             </td>
                                             <td>{{ $order->pickup_at }}</td>
                                             <td>
-                                                <a href="{{ route('orders.show', ['id' => $order->id]) }}"
+                                                <a href="{{ route('orders.show', ['order' => $order]) }}"
                                                     class="btn btn-primary">Detail</a>
                                             </td>
                                         </tr>
-                                    @endforeach
-                                </table>
+                                        @empty
+                                        @endforelse
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    </div>
-@endsection
+            </section>
+        </div>
+    @endsection
 
-@push('scripts')
-    <!-- JS Libraies -->
-    {{-- <script src="{{ asset('library/jquery-sparkline/jquery.sparkline.min.js') }}"></script> --}}
-    <script src="{{ asset('library/chart.js/dist/Chart.js') }}"></script>
-    {{-- <script src="{{ asset('library/owl.carousel/dist/owl.carousel.min.js') }}"></script> --}}
-    {{-- <script src="{{ asset('library/summernote/dist/summernote-bs4.min.js') }}"></script> --}}
-    {{-- <script src="{{ asset('library/chocolat/dist/js/jquery.chocolat.min.js') }}"></script> --}}
+    @push('scripts')
+        <!-- JS Libraies -->
+        {{-- <script src="{{ asset('library/jquery-sparkline/jquery.sparkline.min.js') }}"></script> --}}
+        <script src="{{ asset('library/chart.js/dist/Chart.js') }}"></script>
+        {{-- <script src="{{ asset('library/owl.carousel/dist/owl.carousel.min.js') }}"></script> --}}
+        {{-- <script src="{{ asset('library/summernote/dist/summernote-bs4.min.js') }}"></script> --}}
+        {{-- <script src="{{ asset('library/chocolat/dist/js/jquery.chocolat.min.js') }}"></script> --}}
 
-    <!-- Page Specific JS File -->
-    <script src="{{ asset('js/page/index.js') }}"></script>
-@endpush
+        <!-- Page Specific JS File -->
+        <script src="{{ asset('js/page/index.js') }}"></script>
+    @endpush

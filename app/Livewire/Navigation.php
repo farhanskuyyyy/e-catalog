@@ -24,7 +24,7 @@ class Navigation extends Component
                 'name' => 'Dashboard',
                 'routeName' => 'dashboard',
                 'prefixName' => 'dashboard',
-                'icon' => 'fa-solid fa-chart-line',
+                'icon' => 'fas fa-chart-line',
                 'info' => null,
                 'children' => []
             ],
@@ -32,7 +32,7 @@ class Navigation extends Component
                 'name' => 'Orders',
                 'routeName' => 'orders.index',
                 'prefixName' => 'orders',
-                'icon' => 'fa-solid fa-hand-holding-dollar',
+                'icon' => 'fas fa-shopping-cart',
                 'info' => $orders_count ?? 0,
                 'children' => []
             ],
@@ -40,7 +40,7 @@ class Navigation extends Component
                 'name' => 'Merchants',
                 'routeName' => 'merchants.index',
                 'prefixName' => 'merchants',
-                'icon' => 'fa-solid fa-handshake-angle',
+                'icon' => 'far fa-user',
                 'info' => null,
                 'children' => []
             ],
@@ -48,7 +48,7 @@ class Navigation extends Component
                 'name' => 'Role Permissions',
                 'routeName' => '#',
                 'prefixName' => 'role_permissions',
-                'icon' => 'fa-solid fa-layer-group',
+                'icon' => 'fas fa-user-shield',
                 'info' => null,
                 'children' => [
                     [
@@ -81,7 +81,7 @@ class Navigation extends Component
                 'name' => 'Master Data',
                 'routeName' => '#',
                 'prefixName' => 'master_data',
-                'icon' => 'fa-th-large',
+                'icon' => 'fas fa-th-large',
                 'info' => null,
                 'children' => [
                     [
