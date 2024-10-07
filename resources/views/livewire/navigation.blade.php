@@ -37,7 +37,15 @@
                     @canany("view {$menu['prefixName']}")
                         <li class="{{ $prefixRouteNow == $menu['prefixName'] ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route($menu['routeName']) }}"><i class="{{ $menu['icon'] }}"></i>
-                                <span>{{ $menu['name'] }}</span></a>
+                                <span>{{ $menu['name'] }}</span>
+                                @if ($menu['info'])
+                                    <span class="text-right">
+                                        <button class="border-primary rounded-lg text-primary px-2 bg-white">
+                                            {{ $menu['info'] }}
+                                        </button>
+                                    </span>
+                                @endif
+                            </a>
                         </li>
                     @endcanany
                 @endif
