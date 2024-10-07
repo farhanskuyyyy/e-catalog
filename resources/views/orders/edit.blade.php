@@ -23,7 +23,7 @@
                 <div class="card">
                     <div class="card-body">
                         <form method="POST" action="{{ route('orders.update', ['order' => $order]) }}">
-                            @method('PATCH')
+                            @method('PUT')
                             @csrf
                             <div class="form-group">
                                 <label for="order_code">Order Code</label>

@@ -22,7 +22,7 @@
                 <div class="card">
                     <div class="card-body">
                         <form method="POST" action="{{ route('roles.update', ['role' => $role]) }}">
-                            @method('PATCH')
+                            @method('PUT')
                             @csrf
                             <div class="form-group">
                                 <label for="name">Name</label>

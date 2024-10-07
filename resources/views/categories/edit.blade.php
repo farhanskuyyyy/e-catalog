@@ -22,7 +22,7 @@
                 <div class="card">
                     <div class="card-body">
                         <form method="POST" action="{{ route('categories.update', ['category' => $category]) }}">
-                            @method('PATCH')
+                            @method('PUT')
                             @csrf
                             <div class="form-group">
                                 <label for="name">Name</label>
