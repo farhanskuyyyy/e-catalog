@@ -18,7 +18,7 @@ class ProductController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:view products', ['index']),
+            new Middleware('permission:view products', ['index', 'getDataList']),
             new Middleware('permission:edit products', ['edit', 'update']),
             new Middleware('permission:create products', ['create', 'store']),
             new Middleware('permission:delete products', ['destroy']),
@@ -129,7 +129,7 @@ class ProductController extends Controller implements HasMiddleware
             'price' => ['required', 'numeric'],
             'stock' => ['required', 'numeric'],
             'estimated_time' => ['required'],
-            'image' => ['sometimes','mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,txt','max:4096']
+            'image' => ['sometimes', 'mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,txt', 'max:4096']
         ]);
 
         try {

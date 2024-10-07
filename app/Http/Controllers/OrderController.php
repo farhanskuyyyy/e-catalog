@@ -17,7 +17,7 @@ class OrderController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:view orders', ['index']),
+            new Middleware('permission:view orders', ['index','getDataList']),
             new Middleware('permission:edit orders', ['edit', 'update']),
             new Middleware('permission:create orders', ['create', 'store']),
             new Middleware('permission:delete orders', ['destroy']),
