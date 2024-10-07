@@ -25,46 +25,46 @@
                         <div class="form-group">
                             <label for="order_code">Order Code</label>
                             <input type="text" name="order_code" id="order_code" class="form-control" readonly
-                                value="{{ $findOrder->order_code }}">
+                                value="{{ $order->order_code }}">
                         </div>
                         <div class="form-group">
                             <label for="user">User</label>
                             <select name="user" id="user" class="form-control" readonly>
                                 <option value="">
-                                    {{ "{$findOrder->user->name} ( {$findOrder->user->phonenumber} )" }}
+                                    {{ "{$order->user->name} ( {$order->user->phonenumber} )" }}
                                 </option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="payment">Payment</label>
                             <select name="payment" id="payment" class="form-control" readonly>
-                                <option value="">{{ $findOrder->payment }}
+                                <option value="">{{ $order->payment }}
                                 </option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="shipping">Shipping</label>
                             <select name="shipping" id="shipping" class="form-control" readonly>
-                                <option value="">{{ $findOrder->shipping }}
+                                <option value="">{{ $order->shipping }}
                                 </option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="status">Status</label>
                             <select name="status" id="status" class="form-control" readonly>
-                                <option value="">{{ $findOrder->status }}
+                                <option value="">{{ $order->status }}
                                 </option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="pickup_at">Pickup At</label>
                             <input type="text" name="pickup_at" id="pickup_at" class="form-control datetimepicker" readonly
-                                value="{{ $findOrder->pickup_at }}">
+                                value="{{ $order->pickup_at }}">
                         </div>
                         <div class="form-group">
                             <label for="note">Note</label>
                             <input type="text" name="note" id="note" class="form-control" readonly
-                                value="{{ $findOrder->note }}">
+                                value="{{ $order->note }}">
                         </div>
                         <hr>
                         <p>Order List</p>
@@ -79,7 +79,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($findOrder->lists as $key => $list)
+                                @foreach ($order->lists as $key => $list)
                                     <tr>
                                         <th scope="row">{{ $key + 1 }}</th>
                                         <td>{{ $list->product->name }}</td>

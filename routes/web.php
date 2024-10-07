@@ -22,65 +22,26 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get("roles/list", [RoleController::class, "getDataList"])->name("roles.list");
     Route::resource('roles', RoleController::class);
+
+    Route::get("permissions/list", [PermissionController::class, "getDataList"])->name("permissions.list");
     Route::resource('permissions', PermissionController::class);
+
+    Route::get("merchants/list", [MerchantController::class, "getDataList"])->name("merchants.list");
     Route::resource('merchants', MerchantController::class);
 
-    Route::prefix("categories")
-        ->name("categories.")
-        ->controller(CategoryController::class)
-        ->group(function () {
-            Route::get("/", "index")->name("index");
-            Route::get("/create", "create")->name("create");
-            Route::get("/{id}/edit", "edit")->name("edit");
-            Route::get("/{id}/show", "show")->name("show");
-            Route::post("/store", "store")->name("store");
-            Route::post("/{id}/update", "update")->name("update");
-            Route::delete("/{id}/delete", "destroy")->name("delete");
-            Route::get("/list", "getDataList")->name("list");
-        });
+    Route::get("categories/list", [CategoryController::class, "getDataList"])->name("categories.list");
+    Route::resource('categories', CategoryController::class);
 
-    Route::prefix("products")
-        ->name("products.")
-        ->controller(ProductController::class)
-        ->group(function () {
-            Route::get("/", "index")->name("index");
-            Route::get("/create", "create")->name("create");
-            Route::get("/{id}/edit", "edit")->name("edit");
-            Route::get("/{id}/show", "show")->name("show");
-            Route::post("/store", "store")->name("store");
-            Route::post("/{id}/update", "update")->name("update");
-            Route::delete("/{id}/delete", "destroy")->name("delete");
-            Route::get("/list", "getDataList")->name("list");
-        });
+    Route::get("products/list", [ProductController::class, "getDataList"])->name("products.list");
+    Route::resource('products', ProductController::class);
 
-    Route::prefix("orders")
-        ->name("orders.")
-        ->controller(OrderController::class)
-        ->group(function () {
-            Route::get("/", "index")->name("index");
-            Route::get("/create", "create")->name("create");
-            Route::get("/{id}/edit", "edit")->name("edit");
-            Route::get("/{id}/show", "show")->name("show");
-            Route::post("/store", "store")->name("store");
-            Route::post("/{id}/update", "update")->name("update");
-            Route::delete("/{id}/delete", "destroy")->name("delete");
-            Route::get("/list", "getDataList")->name("list");
-        });
+    Route::get("orders/list", [OrderController::class, "getDataList"])->name("orders.list");
+    Route::resource('orders', OrderController::class);
 
-    Route::prefix("users")
-        ->name("users.")
-        ->controller(UserController::class)
-        ->group(function () {
-            Route::get("/", "index")->name("index");
-            Route::get("/create", "create")->name("create");
-            Route::get("/{id}/edit", "edit")->name("edit");
-            Route::get("/{id}/show", "show")->name("show");
-            Route::post("/store", "store")->name("store");
-            Route::post("/{id}/update", "update")->name("update");
-            Route::delete("/{id}/delete", "destroy")->name("delete");
-            Route::get("/list", "getDataList")->name("list");
-        });
+    Route::get("users/list", [UserController::class, "getDataList"])->name("users.list");
+    Route::resource('users', UserController::class);
 });
 
 require __DIR__ . '/auth.php';

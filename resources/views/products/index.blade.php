@@ -4,7 +4,7 @@
 
 @push('style')
     <!-- CSS Libraries -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="{{ asset('library/datatables/v2/dataTables.dataTables.min.css') }}">
 @endpush
 
 @section('main')
@@ -25,7 +25,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table-striped table" id="table-product"  style="text-align: center">
+                            <table class="table-striped table" id="table-products" style="text-align: center">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Name</th>
@@ -51,13 +51,12 @@
 
 @push('scripts')
     <!-- JS Libraies -->
-    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="{{ asset('library/datatables/v2/dataTables.min.js') }}"></script>
     <script>
-        var base_url = $('meta[name=base_url]').attr('content');
         getDataList()
 
         function getDataList() {
-            $("#table-product").DataTable({
+            $("#table-products").DataTable({
                 ajax: {
                     'type': 'get',
                     'url': "{{ route('products.list') }}",
@@ -92,7 +91,7 @@
                         data: null,
                         class: 'text-center',
                         render: function(data) {
-                            return (data.estimated_time) ? data.estimated_time+" Minutes" : "Instant"
+                            return (data.estimated_time) ? data.estimated_time + " Minutes" : "Instant"
                         },
                     },
                     {
@@ -106,60 +105,56 @@
                         data: null,
                         class: 'text-center',
                         render: function(data) {
-                            var action_html =
-                                `<a href="${base_url}/products/${data.id}/show"  class="btn btn-success btn-sm" alt="View Detail" title="View Detail"><i class="fa fa-eye"></i></a>
-                            <a href="${base_url}/products/${data.id}/edit"  class="btn btn-warning btn-sm" alt="View Edit" title="View Edit"><i class="fa fa-edit"></i></a>
-                            <a href="javascript:void(0)" onclick="deleteCategory('${data.id}')" class="btn btn-danger btn-sm" alt="Delete" title="Delete"><i class="fa fa-trash"></i></a> `;
-                            return action_html;
+                            return data.action;
                         },
                     }
                 ]
             });
         }
 
-        function deleteCategory(id) {
-                Swal.fire({
-                    title: 'Do you want to delete the product?',
-                    showCancelButton: true,
-                    icon: 'warning',
-                    confirmButtonColor: '#eb2626',
-                    confirmButtonText: 'Delete',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: base_url + "/products/" + id + "/delete",
-                            method: "DELETE",
-                            beforeSend: function() {
-                                Swal.fire({
-                                    title: 'Please Wait !',
-                                    html: 'Updating Data ...', // add html attribute if you want or remove
-                                    allowOutsideClick: false,
-                                    onBeforeOpen: () => {
-                                        Swal.showLoading()
-                                    },
-                                });
-                            },
-                            success: function(data) {
-                                swal.fire({
-                                    icon: "success",
-                                    title: "Success!",
-                                    text: data.message,
-                                    timer : 2000
-                                });
-                                $('#table-product').DataTable().destroy();
-                                getDataList();
-                            },
-                            error: function(jqXHR, textStatus, errorThrown) {
-                                swal.fire({
-                                    icon: "error",
-                                    title: "Error!",
-                                    text: jqXHR.responseJSON.message,
-                                    timer : 2000
-                                });
-                            }
-                        });
-                    }
-                })
-            }
+        function deleteProduct(url) {
+            Swal.fire({
+                title: 'Do you want to delete the product?',
+                showCancelButton: true,
+                icon: 'warning',
+                confirmButtonColor: '#eb2626',
+                confirmButtonText: 'Delete',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        method: "DELETE",
+                        beforeSend: function() {
+                            Swal.fire({
+                                title: 'Please Wait !',
+                                html: 'Updating Data ...', // add html attribute if you want or remove
+                                allowOutsideClick: false,
+                                onBeforeOpen: () => {
+                                    Swal.showLoading()
+                                },
+                            });
+                        },
+                        success: function(data) {
+                            swal.fire({
+                                icon: "success",
+                                title: "Success!",
+                                text: data.message,
+                                timer: 2000
+                            });
+                            $('#table-products').DataTable().destroy();
+                            getDataList();
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            swal.fire({
+                                icon: "error",
+                                title: "Error!",
+                                text: jqXHR.responseJSON.message,
+                                timer: 2000
+                            });
+                        }
+                    });
+                }
+            })
+        }
     </script>
 @endpush

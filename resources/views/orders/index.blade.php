@@ -4,7 +4,7 @@
 
 @push('style')
     <!-- CSS Libraries -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="{{ asset('library/datatables/v2/dataTables.dataTables.min.css') }}">
 @endpush
 
 @section('main')
@@ -21,11 +21,11 @@
             <div class="section-body">
                 <div class="card">
                     <div class="card-header">
-                        {{-- <a href="{{ route('orders.create') }}" class="btn btn-success">Add Order</a> --}}
+                        <a href="{{ route('orders.create') }}" class="btn btn-success">Add Order</a>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table-striped table" id="table-order" style="text-align: center">
+                            <table class="table-striped table" id="table-orders" style="text-align: center">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Order Code</th>
@@ -51,13 +51,12 @@
 
 @push('scripts')
     <!-- JS Libraies -->
-    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="{{ asset('library/datatables/v2/dataTables.min.js') }}"></script>
     <script>
-        var base_url = $('meta[name=base_url]').attr('content');
         getDataList()
 
         function getDataList() {
-            $("#table-order").DataTable({
+            $("#table-orders").DataTable({
                 ajax: {
                     'type': 'get',
                     'url': "{{ route('orders.list') }}",
@@ -125,18 +124,14 @@
                         data: null,
                         class: 'text-center',
                         render: function(data) {
-                            var action_html = "";
-                            action_html += `<a href="${base_url}/orders/${data.id}/show"  class="btn btn-success btn-sm mr-2" alt="View Detail" title="View Detail"><i class="fa fa-eye"></i></a>`
-                            // action_html += `<a href="${base_url}/orders/${data.id}/edit"  class="btn btn-warning btn-sm" alt="View Edit" title="View Edit"><i class="fa fa-edit"></i></a>`
-                            action_html += `<a href="javascript:void(0)" onclick="deleteCategory('${data.id}')" class="btn btn-danger btn-sm" alt="Delete" title="Delete"><i class="fa fa-trash"></i></a> `;
-                            return action_html;
+                            return data.action
                         },
                     }
                 ]
             });
         }
 
-        function deleteCategory(id) {
+        function deleteOrder(url) {
             Swal.fire({
                 title: 'Do you want to delete the order?',
                 showCancelButton: true,
@@ -146,7 +141,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: base_url + "/orders/" + id + "/delete",
+                        url: url,
                         method: "DELETE",
                         beforeSend: function() {
                             Swal.fire({
@@ -165,7 +160,7 @@
                                 text: data.message,
                                 timer: 2000
                             });
-                            $('#table-order').DataTable().destroy();
+                            $('#table-orders').DataTable().destroy();
                             getDataList();
                         },
                         error: function(jqXHR, textStatus, errorThrown) {

@@ -23,12 +23,13 @@
                     <div class="card-header">
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('orders.update', ['id' => $findOrder->id]) }}">
+                        <form method="POST" action="{{ route('orders.update', ['order' => $order]) }}">
+                            @method('PATCH')
                             @csrf
                             <div class="form-group">
                                 <label for="order_code">Order Code</label>
                                 <input type="text" name="order_code" id="order_code" class="form-control" readonly
-                                    value="{{ $findOrder->order_code }}">
+                                    value="{{ $order->order_code }}">
                             </div>
                             <div class="form-group">
                                 <label for="user">User</label>
@@ -36,7 +37,7 @@
                                     <option value="">Select User</option>
                                     @foreach ($users as $user)
                                         <option value="{{ $user->id }}"
-                                            {{ $user->id == $findOrder->user->id ? 'selected' : '' }}>
+                                            {{ $user->id == $order->user->id ? 'selected' : '' }}>
                                             {{ "{$user->name} ( {$user->phonenumber} )" }}
                                         </option>
                                     @endforeach
@@ -48,7 +49,7 @@
                                     <option value="">Select Payment</option>
                                     @foreach ($payments as $payment)
                                         <option value="{{ $payment }}"
-                                            {{ $payment == $findOrder->payment ? 'selected' : '' }}>{{ $payment }}
+                                            {{ $payment == $order->payment ? 'selected' : '' }}>{{ $payment }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -59,7 +60,7 @@
                                     <option value="">Select Shipping</option>
                                     @foreach ($shippings as $shipping)
                                         <option value="{{ $shipping }}"
-                                            {{ $shipping == $findOrder->shipping ? 'selected' : '' }}>{{ $shipping }}
+                                            {{ $shipping == $order->shipping ? 'selected' : '' }}>{{ $shipping }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -70,7 +71,7 @@
                                     <option value="">Select Status</option>
                                     @foreach ($status as $stat)
                                         <option value="{{ $stat }}"
-                                            {{ $stat == $findOrder->status ? 'selected' : '' }}>
+                                            {{ $stat == $order->status ? 'selected' : '' }}>
                                             {{ $stat }}</option>
                                     @endforeach
                                 </select>
@@ -78,12 +79,12 @@
                             <div class="form-group">
                                 <label for="pickup_at">Pickup At</label>
                                 <input type="text" name="pickup_at" id="pickup_at" class="form-control datetimepicker"
-                                    value="{{ $findOrder->pickup_at }}">
+                                    value="{{ $order->pickup_at }}">
                             </div>
                             <div class="form-group">
                                 <label for="note">Note</label>
                                 <input type="text" name="note" id="note" class="form-control"
-                                    value="{{ $findOrder->note }}">
+                                    value="{{ $order->note }}">
                             </div>
                             <hr>
                             <p>Order List</p>
@@ -98,7 +99,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($findOrder->lists as $key => $list)
+                                    @foreach ($order->lists as $key => $list)
                                         <tr>
                                             <th scope="row">{{ $key + 1 }}</th>
                                             <td>{{ $list->product->name }}</td>

@@ -6,10 +6,23 @@ use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class UserController extends Controller
+class UserController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:view users', ['index']),
+            new Middleware('permission:edit users', ['edit', 'update']),
+            new Middleware('permission:create users', ['create', 'store']),
+            new Middleware('permission:delete users', ['destroy']),
+            new Middleware('permission:show users', ['show']),
+        ];
+    }
     /**
      * Display a listing of the resource.
      */
@@ -49,7 +62,6 @@ class UserController extends Controller
 
             return redirect()->route('users.index')->with('success', "Success");
         } catch (\Exception $th) {
-            dd($th->getMessage());
             return redirect()->back()->with('error', "Failed");
         }
     }
@@ -57,11 +69,10 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($user)
+    public function show(User $user)
     {
         try {
-            $findUser = User::find($user);
-            return view('users.show', compact('findUser'));
+            return view('users.show', compact('user'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error', "Data Not Found");
         }
@@ -70,11 +81,10 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($user)
+    public function edit(User $user)
     {
         try {
-            $findUser = User::find($user);
-            return view('users.edit', compact('findUser'));
+            return view('users.edit', compact('user'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error', "Data Not Found");
         }
@@ -83,21 +93,16 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $user)
+    public function update(Request $request, User $user)
     {
         $request->validate([
             'name' => ['required'],
         ]);
 
         try {
-            $findUser = User::find($user);
-            if ($findUser == null) {
-                throw new Exception("User Not Found");
-            }
-
             try {
                 DB::beginTransaction();
-                $update = $findUser->update([
+                $update = $user->update([
                     'name' => $request->input('name'),
                     "phonenumber" => $request->input('phonenumber'),
                     "email" => $request->input('email')
@@ -110,6 +115,7 @@ class UserController extends Controller
                 DB::commit();
             } catch (\Exception $th) {
                 DB::rollBack();
+                throw new Exception($th->getMessage());
             }
             return redirect()->route('users.index')->with('success', "Success");
         } catch (\Exception $th) {
@@ -120,15 +126,10 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($user)
+    public function destroy(User $user)
     {
         try {
-            $findUser = User::find($user);
-            if ($findUser == null) {
-                throw new Exception("User Not Found");
-            }
-
-            $delete = $findUser->delete();
+            $delete = $user->delete();
             if (!$delete) {
                 throw new Exception("Failed Delete User");
             }
@@ -149,7 +150,31 @@ class UserController extends Controller
     {
         try {
             return response()->json([
-                'data' => User::all()
+                'data' => User::all()->map(function ($user) {
+                    $action = "";
+                    if (Auth::user()->can('show users')) {
+                        $route = route('users.show', ['user' => $user]);
+                        $action .= "<a href='$route' class='btn btn-success btn-sm mr-1' alt='View Detail' title='View Detail'><i class='fa fa-eye'></i></a>";
+                    }
+                    if (Auth::user()->can('edit users')) {
+                        $route = route('users.edit', ['user' => $user]);
+                        $action .= "<a href='$route' class='btn btn-warning btn-sm mr-1' alt='View Edit' title='View Edit'><i class='fa fa-edit'></i></a>";
+                    }
+                    if (Auth::user()->can('delete users')) {
+                        $route = route('users.destroy', ['user' => $user]);
+                        $action .= "<a href='javascript:void(0)' onclick='deleteUser(\"{$route}\")' class='btn btn-danger btn-sm mr-1' alt='Delete' title='Delete'><i class='fa fa-trash'></i></a>";
+                    }
+                    return (object)[
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'phonenumber' => $user->phonenumber,
+                        'roles' => count($user->roles) > 0 ? $user->roles->pluck('name')->implode(',') : 'No Role',
+                        'created_at' => $user->created_at,
+                        'updated_at' => $user->updated_at,
+                        'action' => $action
+                    ];
+                })
             ]);
         } catch (\Throwable $th) {
             return response()->json([
