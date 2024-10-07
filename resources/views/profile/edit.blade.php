@@ -19,8 +19,6 @@
 
             <div class="section-body">
                 <div class="card">
-                    <div class="card-header">
-                    </div>
                     <div class="card-body">
                         <div class="p-4 bg-white">
                             <div class="">

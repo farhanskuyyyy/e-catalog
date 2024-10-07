@@ -19,30 +19,37 @@
 
         <div>
             <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 form-control w-25" :value="old('name', $user->name)" required autofocus autocomplete="name" />
+            <x-text-input id="name" name="name" type="text" class="mt-1 form-control " :value="old('name', $user->name)"
+                required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
         <div>
-            <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}" class="rounded mt-2" style="width: 90px;height:90px">
+            <div class="my-3" id="preview-image">
+                <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}" class="rounded mt-2"
+                    style="width: 90px;height:90px">
+            </div>
             <br>
             <x-input-label for="avatar" :value="__('Avatar')" />
             <br>
-            <x-text-input id="avatar" class="block form-control w-25" type="file" name="avatar" autofocus autocomplete="avatar" />
+            <x-text-input id="avatar" class="block form-control " type="file" name="avatar" autofocus
+                autocomplete="avatar" />
             <x-input-error :messages="$errors->get('avatar')" class="mt-2" />
         </div>
 
         <div>
-            <x-input-label for="email" :value="__('Email')" class="mt-2 "/>
-            <x-text-input id="email" name="email" type="email" class="form-control w-25 mb-2" :value="old('email', $user->email)" required autocomplete="username" />
+            <x-input-label for="email" :value="__('Email')" class="mt-2 " />
+            <x-text-input id="email" name="email" type="email" class="form-control  mb-2" :value="old('email', $user->email)"
+                required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
-            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
+            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
                 <div>
                     <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
                         {{ __('Your email address is unverified.') }}
 
-                        <button form="send-verification" class="underline text-sm hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                        <button form="send-verification"
+                            class="underline text-sm hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
                             {{ __('Click here to re-send the verification email.') }}
                         </button>
                     </p>
@@ -60,14 +67,32 @@
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 
             @if (session('status') === 'profile-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm"
-                >{{ __('Saved.') }}</p>
+                <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)" class="text-sm">
+                    {{ __('Saved.') }}</p>
             @endif
         </div>
     </form>
 </section>
+
+@push('scripts')
+    <script>
+        $('#avatar').change(function() {
+            var fileTypes = ['jpg', 'jpeg', 'png', 'gif', 'svg']; //acceptable file types
+
+            var extension = this.files[0].name.split('.').pop().toLowerCase() //file extension from input file
+            var isSuccess = fileTypes.indexOf(extension) > -1; //is extension in acceptable types
+
+            if (isSuccess) { //yes
+                let reader = new FileReader();
+                reader.onload = (e) => {
+                    $('#preview-image').html(
+                        `<img src="${e.target.result}" alt="Avatar" style="width: 90px;height:90px">`
+                    );
+                }
+                reader.readAsDataURL(this.files[0]);
+            } else {
+                $('#preview-image').html(this.files[0].name);
+            }
+        });
+    </script>
+@endpush

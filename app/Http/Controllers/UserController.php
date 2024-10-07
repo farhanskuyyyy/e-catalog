@@ -6,8 +6,10 @@ use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Controllers\HasMiddleware;
 
@@ -36,7 +38,8 @@ class UserController extends Controller implements HasMiddleware
      */
     public function create()
     {
-        return view('users.create');
+        $roles = Role::get();
+        return view('users.create', compact('roles'));
     }
 
     /**
@@ -46,17 +49,31 @@ class UserController extends Controller implements HasMiddleware
     {
         $request->validate([
             'name' => ['required'],
+            'email' => ['required'],
+            'phonenumber' => ['required'],
+            'avatar' => 'required|mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,txt|max:2048',
         ]);
 
         try {
-            $insert = User::create([
+            if ($request->file('avatar')) {
+                $imagePath = $request->file('avatar')->store('avatars', 'public');
+            }
+
+            $user = User::create([
                 "name" => $request->input('name'),
                 "phonenumber" => $request->input('phonenumber'),
                 "email" => $request->input('email'),
-                "password" => Hash::make("password")
+                "password" => Hash::make("password"),
+                "avatar" => $imagePath ?? null
             ]);
 
-            if (!$insert) {
+            if (!empty($request->roles)) {
+                foreach ($request->roles as $key => $role) {
+                    $user->assignRole($role);
+                }
+            }
+
+            if (!$user) {
                 throw new Exception("Failed Insert User");
             }
 
@@ -72,7 +89,10 @@ class UserController extends Controller implements HasMiddleware
     public function show(User $user)
     {
         try {
-            return view('users.show', compact('user'));
+            $roles = Role::with(['users' => function ($q) use ($user) {
+                $q->where('model_id', $user->id);
+            }])->get();
+            return view('users.show', compact('user', 'roles'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error', "Data Not Found");
         }
@@ -84,7 +104,10 @@ class UserController extends Controller implements HasMiddleware
     public function edit(User $user)
     {
         try {
-            return view('users.edit', compact('user'));
+            $roles = Role::with(['users' => function ($q) use ($user) {
+                $q->where('model_id', $user->id);
+            }])->get();
+            return view('users.edit', compact('user', 'roles'));
         } catch (\Exception $th) {
             return redirect()->back()->with('error', "Data Not Found");
         }
@@ -97,16 +120,40 @@ class UserController extends Controller implements HasMiddleware
     {
         $request->validate([
             'name' => ['required'],
+            'email' => ['required'],
+            'phonenumber' => ['required'],
+            'image' => 'sometimes|mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,txt|max:2048'
         ]);
 
         try {
+            if ($request->file('avatar')) {
+                $imagePath = $request->file('avatar')->store('avatars', 'public');
+            }
+
             try {
                 DB::beginTransaction();
-                $update = $user->update([
+                $data = [
                     'name' => $request->input('name'),
                     "phonenumber" => $request->input('phonenumber'),
-                    "email" => $request->input('email')
-                ]);
+                    "email" => $request->input('email'),
+                ];
+
+                if ($request->file('avatar')) {
+                    $data["avatar"] = $imagePath;
+                    if ($user->avatar) {
+                        if (Storage::exists("public/{$user->avatar}")) {
+                            Storage::delete("public/{$user->avatar}");
+                        }
+                    }
+                }
+
+                $update = $user->update($data);
+
+                if (!empty($request->roles)) {
+                    $user->syncRoles($request->roles);
+                } else {
+                    $user->syncRoles([]);
+                }
 
                 if (!$update) {
                     throw new Exception("Failed Update User");
@@ -129,9 +176,16 @@ class UserController extends Controller implements HasMiddleware
     public function destroy(User $user)
     {
         try {
+            $fileName = $user->avatar;
             $delete = $user->delete();
             if (!$delete) {
                 throw new Exception("Failed Delete User");
+            }
+
+            if ($fileName) {
+                if (Storage::exists("public/{$fileName}")) {
+                    Storage::delete("public/{$fileName}");
+                }
             }
 
             return response()->json([
