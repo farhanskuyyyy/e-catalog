@@ -6,7 +6,8 @@
     <!-- CSS Libraries -->
 @endpush
 
-@section('main')<div class="main-content">
+@section('main')
+    <div class="main-content">
         <section class="section">
             <div class="section-header">
                 <h1>Show Order</h1>
@@ -56,8 +57,8 @@
                         </div>
                         <div class="form-group">
                             <label for="pickup_at">Pickup At</label>
-                            <input type="text" name="pickup_at" id="pickup_at" class="form-control datetimepicker" readonly
-                                value="{{ $order->pickup_at }}">
+                            <input type="text" name="pickup_at" id="pickup_at" class="form-control datetimepicker"
+                                readonly value="{{ $order->pickup_at }}">
                         </div>
                         <div class="form-group">
                             <label for="note">Note</label>

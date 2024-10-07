@@ -6,7 +6,8 @@
     <!-- CSS Libraries -->
 @endpush
 
-@section('main')<div class="main-content">
+@section('main')
+    <div class="main-content">
         <section class="section">
             <div class="section-header">
                 <h1>Create Category</h1>
@@ -24,7 +25,8 @@
                             @csrf
                             <div class="form-group">
                                 <label for="name">Name</label>
-                                <input type="text" class="form-control" id="name" name="name" required value="{{ old('name') }}">
+                                <input type="text" class="form-control" id="name" name="name" required
+                                    value="{{ old('name') }}">
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>

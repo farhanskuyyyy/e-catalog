@@ -6,7 +6,8 @@
     <!-- CSS Libraries -->
 @endpush
 
-@section('main')<div class="main-content">
+@section('main')
+    <div class="main-content">
         <section class="section">
             <div class="section-header">
                 <h1>Edit User</h1>
@@ -20,20 +21,23 @@
             <div class="section-body">
                 <div class="card">
                     <div class="card-body">
-                        <form method="POST" action="{{ route('users.update',['id' => $user->id]) }}">
+                        <form method="POST" action="{{ route('users.update', ['id' => $user->id]) }}">
                             @method('PATCH')
                             @csrf
                             <div class="form-group">
                                 <label for="name">Name</label>
-                                <input type="text" class="form-control" id="name" name="name" required value="{{ $user->name }}">
+                                <input type="text" class="form-control" id="name" name="name" required
+                                    value="{{ $user->name }}">
                             </div>
                             <div class="form-group">
                                 <label for="phonenumber">Phonenumber</label>
-                                <input type="text" class="form-control" id="phonenumber" name="phonenumber" value="{{ $user->phonenumber }}">
+                                <input type="text" class="form-control" id="phonenumber" name="phonenumber"
+                                    value="{{ $user->phonenumber }}">
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}">
+                                <input type="email" class="form-control" id="email" name="email"
+                                    value="{{ $user->email }}">
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>

@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="{{ asset('library/bootstrap-daterangepicker/daterangepicker.css') }}">
 @endpush
 
-@section('main')<div class="main-content">
+@section('main')
+    <div class="main-content">
         <section class="section">
             <div class="section-header">
                 <h1>Create Order</h1>
@@ -28,7 +29,9 @@
                                 <select name="user" id="user" class="form-control" required>
                                     <option value="">Select User</option>
                                     @foreach ($users as $user)
-                                        <option value="{{ $user->id }}" {{ $user->id == old('user') ? 'selected' : '' }}>{{ "{$user->name} ( {$user->email} )" }}
+                                        <option value="{{ $user->id }}"
+                                            {{ $user->id == old('user') ? 'selected' : '' }}>
+                                            {{ "{$user->name} ( {$user->email} )" }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -38,7 +41,8 @@
                                 <select name="payment" id="payment" class="form-control" required>
                                     <option value="">Select Payment</option>
                                     @foreach ($payments as $payment)
-                                        <option value="{{ $payment }}" {{ $payment == old('payment') ? 'selected' : '' }}>{{ $payment }}</option>
+                                        <option value="{{ $payment }}"
+                                            {{ $payment == old('payment') ? 'selected' : '' }}>{{ $payment }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -47,7 +51,9 @@
                                 <select name="shipping" id="shipping" class="form-control" required>
                                     <option value="">Select Shipping</option>
                                     @foreach ($shippings as $shipping)
-                                        <option value="{{ $shipping }}" {{ $shipping == old('shipping') ? 'selected' : '' }}>{{ $shipping }}</option>
+                                        <option value="{{ $shipping }}"
+                                            {{ $shipping == old('shipping') ? 'selected' : '' }}>{{ $shipping }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -56,7 +62,8 @@
                                 <select name="status" id="status" class="form-control" required>
                                     <option value="">Select Status</option>
                                     @foreach ($status as $stat)
-                                        <option value="{{ $stat }}" {{ $stat == old('stat') ? 'selected' : '' }}>{{ $stat }}</option>
+                                        <option value="{{ $stat }}" {{ $stat == old('stat') ? 'selected' : '' }}>
+                                            {{ $stat }}</option>
                                     @endforeach
                                 </select>
                             </div>

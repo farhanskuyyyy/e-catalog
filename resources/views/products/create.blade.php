@@ -6,7 +6,8 @@
     <!-- CSS Libraries -->
 @endpush
 
-@section('main')<div class="main-content">
+@section('main')
+    <div class="main-content">
         <section class="section">
             <div class="section-header">
                 <h1>Create Product</h1>
@@ -59,7 +60,8 @@
                                     required value="{{ old('image') }}">
                             </div>
                             <div class="mb-3" id="preview-image">
-                                <img src="" alt="" width="300" height="400" onerror="this.src='https://placehold.co/100x100'">
+                                <img src="" alt="" width="300" height="400"
+                                    onerror="this.src='https://placehold.co/100x100'">
                             </div>
                             <div class="form-group">
                                 <label for="description">Description</label>

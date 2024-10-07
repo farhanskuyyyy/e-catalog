@@ -6,7 +6,8 @@
     <!-- CSS Libraries -->
 @endpush
 
-@section('main')<div class="main-content">
+@section('main')
+    <div class="main-content">
         <section class="section">
             <div class="section-header">
                 <h1>Edit Category</h1>
@@ -20,13 +21,13 @@
             <div class="section-body">
                 <div class="card">
                     <div class="card-body">
-                        <form method="POST" action="{{ route('categories.update',['category' => $category]) }}">
+                        <form method="POST" action="{{ route('categories.update', ['category' => $category]) }}">
                             @method('PATCH')
                             @csrf
                             <div class="form-group">
                                 <label for="name">Name</label>
-                                <input type="text"
-                                    class="form-control" id="name" name="name" value="{{ $category->name }}" required>
+                                <input type="text" class="form-control" id="name" name="name"
+                                    value="{{ $category->name }}" required>
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
