@@ -43,18 +43,12 @@ class PermissionController extends Controller implements HasMiddleware
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePermissionRequest $request)
     {
-        $request->validate([
-            'name' => ['required'],
-        ]);
-
         try {
             try {
                 DB::beginTransaction();
-                $insert = Permission::create([
-                    "name" => $request->input('name')
-                ]);
+                $insert = Permission::create($request->validated());
 
                 if (!$insert) {
                     throw new Exception("Failed Insert Permission");
@@ -98,18 +92,12 @@ class PermissionController extends Controller implements HasMiddleware
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Permission $permission)
+    public function update(UpdatePermissionRequest $request, Permission $permission)
     {
-        $request->validate([
-            'name' => ['required'],
-        ]);
-
         try {
             try {
                 DB::beginTransaction();
-                $update = $permission->update([
-                    'name' => $request->input('name')
-                ]);
+                $update = $permission->update($request->validated());
 
                 if (!$update) {
                     throw new Exception("Failed Update Permission");

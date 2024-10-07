@@ -28,6 +28,7 @@
                                 <label for="name">Name</label>
                                 <input type="text" class="form-control" id="name" name="name"
                                     value="{{ $permission->name }}" required>
+                                <x-input-error :messages="$errors->get('name')" class="mt-1" />
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
