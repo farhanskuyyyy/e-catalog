@@ -155,8 +155,8 @@ class ProductController extends Controller
                 if ($request->file('image')) {
                     $data["image"] = $fileName;
                     if ($findProduct->image) {
-                        if (Storage::exists('public/product/' . $findProduct->image)) {
-                            Storage::delete('public/product/' . $findProduct->image);
+                        if (Storage::exists('public/products/' . $findProduct->image)) {
+                            Storage::delete('public/products/' . $findProduct->image);
                         }
                     }
                 }
@@ -195,8 +195,8 @@ class ProductController extends Controller
             }
 
             if ($fileName) {
-                if (Storage::exists('public/product/' . $fileName)) {
-                    Storage::delete('public/product/' . $fileName);
+                if (Storage::exists('public/products/' . $fileName)) {
+                    Storage::delete('public/products/' . $fileName);
                 }
             }
 

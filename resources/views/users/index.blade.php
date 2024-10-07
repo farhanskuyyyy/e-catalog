@@ -14,8 +14,7 @@
                 <h1>User</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('users.index') }}">User</a></div>
-                    <div class="breadcrumb-item">Index</div>
+                    <div class="breadcrumb-item"><a href="{{ route('users.index') }}">Users</a></div>
                 </div>
             </div>
 
@@ -80,13 +79,21 @@
                         data: 'name',
                     },
                     {
-                        data: 'phonenumber',
+                        data: null,
+                        class: 'text-center',
+                        render: function(data) {
+                            return data.phonenumber ?? "-"
+                        },
                     },
                     {
                         data: 'email',
                     },
                     {
-                        data: 'role',
+                        data: null,
+                        class: 'text-center',
+                        render: function(data) {
+                            return "-"
+                        },
                     },
                     {
                         data: null,
@@ -100,8 +107,8 @@
                         class: 'text-center',
                         render: function(data) {
                             var action_html =
-                                `<a href="${base_url}/user/${data.id}/show"  class="btn btn-success btn-sm" alt="View Detail" title="View Detail"><i class="fa fa-eye"></i></a>
-                            <a href="${base_url}/user/${data.id}/edit"  class="btn btn-warning btn-sm" alt="View Edit" title="View Edit"><i class="fa fa-edit"></i></a>
+                                `<a href="${base_url}/users/${data.id}/show"  class="btn btn-success btn-sm" alt="View Detail" title="View Detail"><i class="fa fa-eye"></i></a>
+                            <a href="${base_url}/users/${data.id}/edit"  class="btn btn-warning btn-sm" alt="View Edit" title="View Edit"><i class="fa fa-edit"></i></a>
                             <a href="javascript:void(0)" onclick="deleteCategory('${data.id}')" class="btn btn-danger btn-sm" alt="Delete" title="Delete"><i class="fa fa-trash"></i></a> `;
                             return action_html;
                         },
@@ -120,7 +127,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: base_url + "/user/" + id + "/delete",
+                            url: base_url + "/users/" + id + "/delete",
                             method: "DELETE",
                             beforeSend: function() {
                                 Swal.fire({

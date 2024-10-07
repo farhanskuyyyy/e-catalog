@@ -12,7 +12,7 @@
                 <h1>Edit Product</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('products.index') }}">Product</a></div>
+                    <div class="breadcrumb-item"><a href="{{ route('products.index') }}">Products</a></div>
                     <div class="breadcrumb-item">Edit</div>
                 </div>
             </div>
@@ -61,7 +61,7 @@
                                     value="{{ $findProduct->image }}">
                             </div>
                             <div class="mb-3" id="preview-image">
-                                <img src="{{ asset('storage/product/'.$findProduct->image) }}" alt="" width="400" height="400" onerror="this.src='https://placehold.co/100x100'">
+                                <img src="{{ asset('storage/products/'.$findProduct->image) }}" alt="" width="400" height="400" onerror="this.src='https://placehold.co/100x100'">
                             </div>
                             <div class="form-group">
                                 <label for="description">Description</label>

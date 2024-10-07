@@ -14,8 +14,7 @@
                 <h1>Category</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('categories.index') }}">Category</a></div>
-                    <div class="breadcrumb-item">Index</div>
+                    <div class="breadcrumb-item"><a href="{{ route('categories.index') }}">Categories</a></div>
                 </div>
             </div>
 
@@ -88,8 +87,8 @@
                         class: 'text-center',
                         render: function(data) {
                             var action_html =
-                                `<a href="${base_url}/category/${data.id}/show"  class="btn btn-success btn-sm" alt="View Detail" title="View Detail"><i class="fa fa-eye"></i></a>
-                            <a href="${base_url}/category/${data.id}/edit"  class="btn btn-warning btn-sm" alt="View Edit" title="View Edit"><i class="fa fa-edit"></i></a>
+                                `<a href="${base_url}/categories/${data.id}/show"  class="btn btn-success btn-sm" alt="View Detail" title="View Detail"><i class="fa fa-eye"></i></a>
+                            <a href="${base_url}/categories/${data.id}/edit"  class="btn btn-warning btn-sm" alt="View Edit" title="View Edit"><i class="fa fa-edit"></i></a>
                             <a href="javascript:void(0)" onclick="deleteCategory('${data.id}')" class="btn btn-danger btn-sm" alt="Delete" title="Delete"><i class="fa fa-trash"></i></a> `;
                             return action_html;
                         },
@@ -108,7 +107,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: base_url + "/category/" + id + "/delete",
+                            url: base_url + "/categories/" + id + "/delete",
                             method: "DELETE",
                             beforeSend: function() {
                                 Swal.fire({

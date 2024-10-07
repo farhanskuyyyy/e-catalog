@@ -13,7 +13,7 @@
                 <h1>Edit Order</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('orders.index') }}">Order</a></div>
+                    <div class="breadcrumb-item"><a href="{{ route('orders.index') }}">Orders</a></div>
                     <div class="breadcrumb-item">Edit</div>
                 </div>
             </div>

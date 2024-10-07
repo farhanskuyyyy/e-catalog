@@ -12,7 +12,7 @@
                 <h1>Create Product</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('products.index') }}">Product</a></div>
+                    <div class="breadcrumb-item"><a href="{{ route('products.index') }}">Products</a></div>
                     <div class="breadcrumb-item">Create</div>
                 </div>
             </div>

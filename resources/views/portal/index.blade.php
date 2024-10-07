@@ -129,7 +129,7 @@
                                     @foreach ($category->products as $product)
                                         <div class="row mb-3 ">
                                             <div class="col-5 col-md-2">
-                                                <img src="{{ asset('storage/product/' . $product->image) }}" alt=""
+                                                <img src="{{ asset('storage/products/' . $product->image) }}" alt=""
                                                 class="p-4" style="width: 120px;height:120px;"
                                                 onerror="this.src='https://placehold.co/100x100'">
                                             </div>
