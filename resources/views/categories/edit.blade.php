@@ -19,15 +19,14 @@
 
             <div class="section-body">
                 <div class="card">
-                    <div class="card-header">
-                    </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('categories.update',['id' => $findCategory->id]) }}">
+                        <form method="POST" action="{{ route('categories.update',['category' => $category]) }}">
+                            @method('PATCH')
                             @csrf
                             <div class="form-group">
                                 <label for="name">Name</label>
                                 <input type="text"
-                                    class="form-control" id="name" name="name" value="{{ $findCategory->name }}" required>
+                                    class="form-control" id="name" name="name" value="{{ $category->name }}" required>
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>

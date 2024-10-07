@@ -2,13 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use Exception;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class CategoryController extends Controller
+class CategoryController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array {
+        return [
+            new Middleware('permission:view categories',['index']),
+            new Middleware('permission:edit categories',['edit','update']),
+            new Middleware('permission:create categories',['create','store']),
+            new Middleware('permission:delete categories',['destroy']),
+            new Middleware('permission:show categories',['show']),
+        ];
+    }
     /**
      * Display a listing of the resource.
      */
@@ -48,6 +60,7 @@ class CategoryController extends Controller
                 DB::commit();
             } catch (\Exception $th) {
                 DB::rollBack();
+                throw new Exception($th->getMessage());
             }
             return redirect()->route('categories.index')->with('success', "Success");
         } catch (\Exception $th) {
@@ -58,47 +71,40 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($category)
+    public function show(Category $category)
     {
         try {
-            $findCategory = Category::find($category);
-            return view('categories.show', compact('findCategory'));
+            return view('categories.show', compact('category'));
         } catch (\Exception $th) {
-            return redirect()->back()->with('error',"Data Not Found");
+            return redirect()->back()->with('error', "Data Not Found");
         }
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($category)
+    public function edit(Category $category)
     {
         try {
-            $findCategory = Category::find($category);
-            return view('categories.edit', compact('findCategory'));
+            return view('categories.edit', compact('category'));
         } catch (\Exception $th) {
-            return redirect()->back()->with('error',"Data Not Found");
+            return redirect()->back()->with('error', "Data Not Found");
         }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $category)
+    public function update(Request $request, Category $category)
     {
         $request->validate([
             'name' => ['required'],
         ]);
 
         try {
-            $findCategory = Category::find($category);
-            if ($findCategory == null) {
-                throw new Exception("Category Not Found");
-            }
-
             try {
                 DB::beginTransaction();
-                $update = $findCategory->update([
+                $update = $category->update([
                     'name' => $request->input('name')
                 ]);
 
@@ -109,6 +115,7 @@ class CategoryController extends Controller
                 DB::commit();
             } catch (\Exception $th) {
                 DB::rollBack();
+                throw new Exception($th->getMessage());
             }
             return redirect()->route('categories.index')->with('success', "Success");
         } catch (\Exception $th) {
@@ -119,15 +126,10 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($category)
+    public function destroy(Category $category)
     {
         try {
-            $findCategory = Category::find($category);
-            if ($findCategory == null) {
-                throw new Exception("Category Not Found");
-            }
-
-            $delete = $findCategory->delete();
+            $delete = $category->delete();
             if (!$delete) {
                 throw new Exception("Failed Delete Category");
             }
@@ -148,7 +150,29 @@ class CategoryController extends Controller
     {
         try {
             return response()->json([
-                'data' => Category::all()
+                'data' => Category::all()->map(function ($category) {
+                    $action = "";
+                    if (Auth::user()->can('show categories')) {
+                        $route = route('categories.show', ['category' => $category]);
+                        $action .= "<a href='$route' class='btn btn-success btn-sm mr-1' alt='View Detail' title='View Detail'><i class='fa fa-eye'></i></a>";
+                    }
+                    if (Auth::user()->can('edit categories')) {
+                        $route = route('categories.edit', ['category' => $category]);
+                        $action .= "<a href='$route' class='btn btn-warning btn-sm mr-1' alt='View Edit' title='View Edit'><i class='fa fa-edit'></i></a>";
+                    }
+                    if (Auth::user()->can('delete categories')) {
+                        $route = route('categories.destroy', ['category' => $category]);
+                        $action .= "<a href='javascript:void(0)' onclick='deleteCategory(\"{$route}\")' class='btn btn-danger btn-sm mr-1' alt='Delete' title='Delete'><i class='fa fa-trash'></i></a>";
+                    }
+
+                    return (object)[
+                        'id' => $category->id,
+                        'name' => $category->name,
+                        'created_at' => $category->created_at,
+                        'updated_at' => $category->updated_at,
+                        'action' => $action
+                    ];
+                })
             ]);
         } catch (\Throwable $th) {
             return response()->json([

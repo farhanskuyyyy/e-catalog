@@ -19,13 +19,11 @@
 
             <div class="section-body">
                 <div class="card">
-                    <div class="card-header">
-                    </div>
                     <div class="card-body">
                         <div class="form-group">
                             <label for="name">Name</label>
                             <input type="text" class="form-control" id="name" name="name"
-                                value="{{ $findCategory->name }}" required readonly>
+                                value="{{ $category->name }}" required readonly>
                         </div>
                         <a href="{{ route('categories.index') }}" class="btn btn-primary">Back</a>
                     </div>
