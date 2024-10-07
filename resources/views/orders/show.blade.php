@@ -19,8 +19,6 @@
 
             <div class="section-body">
                 <div class="card">
-                    <div class="card-header">
-                    </div>
                     <div class="card-body">
                         <div class="form-group">
                             <label for="order_code">Order Code</label>

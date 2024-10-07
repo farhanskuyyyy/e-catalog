@@ -19,8 +19,6 @@
 
             <div class="section-body">
                 <div class="card">
-                    <div class="card-header">
-                    </div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('users.update',['id' => $user->id]) }}">
                             @method('PATCH')

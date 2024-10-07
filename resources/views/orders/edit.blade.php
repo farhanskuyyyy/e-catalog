@@ -20,8 +20,6 @@
 
             <div class="section-body">
                 <div class="card">
-                    <div class="card-header">
-                    </div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('orders.update', ['order' => $order]) }}">
                             @method('PATCH')
