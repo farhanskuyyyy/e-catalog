@@ -129,14 +129,15 @@
                                     @foreach ($category->products as $product)
                                         <div class="row mb-3 ">
                                             <div class="col-5 col-md-2">
-                                                <img src="{{ asset('storage/products/' . $product->image) }}" alt=""
-                                                class="p-4" style="width: 120px;height:120px;"
-                                                onerror="this.src='https://placehold.co/100x100'">
+                                                <img src="{{ Storage::url($product->image) }}" alt="" class="p-4"
+                                                    style="width: 120px;height:120px;"
+                                                    onerror="this.src='https://placehold.co/100x100'">
                                             </div>
                                             <div class="col-7 col-md-8">
                                                 <h5 class="card-title">{{ $product->name }}</h5>
                                                 <p class="card-text">{{ $product->description }}</p>
-                                                <p class="card-text">Rp. {{ number_format($product->price, 2, ',', '.') }}</p>
+                                                <p class="card-text">Rp. {{ number_format($product->price, 2, ',', '.') }}
+                                                </p>
                                             </div>
                                             <div class="col-12 col-md-2">
                                                 <div class="d-flex">
@@ -146,7 +147,7 @@
                                                         data-price="{{ $product->price }}"
                                                         data-name="{{ $product->name }}"
                                                         data-stock="{{ $product->stock }}">Add <span
-                                                        class="text-white">+</span></button>
+                                                            class="text-white">+</span></button>
                                                 </div>
                                             </div>
                                         </div>
