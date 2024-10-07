@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use Spatie\Permission\Models\Permission;
@@ -28,8 +30,7 @@ class RoleController extends Controller implements HasMiddleware
      */
     public function index()
     {
-        $roles = Role::all();
-        return view('roles.index', compact('roles'));
+        return view('roles.index');
     }
 
     /**
@@ -42,7 +43,7 @@ class RoleController extends Controller implements HasMiddleware
         $permissions = [];
         foreach ($role_permission as $per) {
 
-            $name = explode(' ',$per->name)[1];
+            $name = explode(' ', $per->name)[1];
             $key = substr($name, 0);
 
             if (str_starts_with($name, $key)) {
@@ -68,15 +69,19 @@ class RoleController extends Controller implements HasMiddleware
             }
         });
 
-        return redirect()->route('roles.index')->with('success','Success Created');;
+        return redirect()->route('roles.index')->with('success', 'Success Created');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Role $role)
     {
-        //
+        try {
+            return view('roles.show', compact('role'));
+        } catch (\Exception $th) {
+            return redirect()->back()->with('error', "Data Not Found");
+        }
     }
 
     /**
@@ -84,21 +89,25 @@ class RoleController extends Controller implements HasMiddleware
      */
     public function edit(Role $role)
     {
-        DB::statement("SET SQL_MODE=''");
-        $role_permission = Permission::with(['roles' => function ($q) use ($role) {
-            $q->where('role_id', $role->id);
-        }])->groupBy('name')->get();
-        $permissions = [];
-        foreach ($role_permission as $per) {
+        try {
+            DB::statement("SET SQL_MODE=''");
+            $role_permission = Permission::with(['roles' => function ($q) use ($role) {
+                $q->where('role_id', $role->id);
+            }])->groupBy('name')->get();
+            $permissions = [];
+            foreach ($role_permission as $per) {
 
-            $name = explode(' ',$per->name)[1];
-            $key = substr($name, 0);
+                $name = explode(' ', $per->name)[1];
+                $key = substr($name, 0);
 
-            if (str_starts_with($name, $key)) {
-                $permissions[$key][] = $per;
+                if (str_starts_with($name, $key)) {
+                    $permissions[$key][] = $per;
+                }
             }
+            return view('roles.edit', compact('role', 'permissions'));
+        } catch (\Exception $th) {
+            return redirect()->back()->with('error', "Data Not Found");
         }
-        return view('roles.edit', compact('role', 'permissions'));
     }
 
     /**
@@ -117,7 +126,7 @@ class RoleController extends Controller implements HasMiddleware
             }
         });
 
-        return redirect()->route('roles.index')->with('success','Success Updated');;
+        return redirect()->route('roles.index')->with('success', 'Success Updated');
     }
 
     /**
@@ -126,12 +135,56 @@ class RoleController extends Controller implements HasMiddleware
     public function destroy(Role $role)
     {
         try {
-            DB::beginTransaction();
-            $role->delete();
-            DB::commit();
-        } catch (\Throwable $th) {
-            DB::rollBack();
+            $delete = $role->delete();
+            if (!$delete) {
+                throw new Exception("Failed Delete Role");
+            }
+
+            return response()->json([
+                "status" => true,
+                "message" => "Success Delete Role"
+            ], 200);
+        } catch (\Exception $th) {
+            return response()->json([
+                "status" => false,
+                "message" => 'Failed Delete Data'
+            ], 400);
         }
-        return redirect()->route('roles.index')->with('success','Success Deleted');;
+    }
+
+    public function getDataList(Request $request)
+    {
+        try {
+            return response()->json([
+                'data' => Role::all()->map(function ($role) {
+                    $action = "";
+                    if (Auth::user()->can('show roles')) {
+                        $route = route('roles.show', ['role' => $role]);
+                        $action .= "<a href='$route' class='btn btn-success btn-sm mr-1' alt='View Detail' title='View Detail'><i class='fa fa-eye'></i></a>";
+                    }
+                    if (Auth::user()->can('edit roles')) {
+                        $route = route('roles.edit', ['role' => $role]);
+                        $action .= "<a href='$route' class='btn btn-warning btn-sm mr-1' alt='View Edit' title='View Edit'><i class='fa fa-edit'></i></a>";
+                    }
+                    if (Auth::user()->can('delete roles')) {
+                        $route = route('roles.destroy', ['role' => $role]);
+                        $action .= "<a href='javascript:void(0)' onclick='deleteRole(\"{$route}\")' class='btn btn-danger btn-sm mr-1' alt='Delete' title='Delete'><i class='fa fa-trash'></i></a>";
+                    }
+
+                    return (object)[
+                        'id' => $role->id,
+                        'name' => $role->name,
+                        'permissions' => count($role->permissions) > 0 ? $role->permissions->pluck('name')->implode(',') : 'No Permission',
+                        'created_at' => $role->created_at,
+                        'updated_at' => $role->updated_at,
+                        'action' => $action
+                    ];
+                })
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'data' => []
+            ]);
+        }
     }
 }
