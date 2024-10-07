@@ -6,7 +6,8 @@
     <!-- CSS Libraries -->
 @endpush
 
-@section('main')<div class="main-content">
+@section('main')
+    <div class="main-content">
         <section class="section">
             <div class="section-header">
                 <h1>Show User</h1>
@@ -21,15 +22,18 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" readonly value="{{ $user->name }}">
+                            <input type="text" class="form-control" id="name" name="name" readonly
+                                value="{{ $user->name }}">
                         </div>
                         <div class="form-group">
                             <label for="phonenumber">Phonenumber</label>
-                            <input type="text" class="form-control" id="phonenumber" name="phonenumber" readonly value="{{ $user->phonenumber }}">
+                            <input type="text" class="form-control" id="phonenumber" name="phonenumber" readonly
+                                value="{{ $user->phonenumber }}">
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" readonly value="{{ $user->email }}">
+                            <input type="email" class="form-control" id="email" name="email" readonly
+                                value="{{ $user->email }}">
                         </div>
                         <a href="{{ route('users.index') }}" class="btn btn-primary">Back</a>
                     </div>
