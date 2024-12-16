@@ -14,7 +14,7 @@ class Navigation extends Component
         $user = Auth::user();
         $orderQuery = Order::query();
         if ($user->hasRole('merchant')) {
-            $orderQuery->whereHas('merchant', function ($q) use ($user) {
+            $user->whereHas('merchant', function ($q) use ($user) {
                 $q->where('user_id', $user->id);
             });
         }
